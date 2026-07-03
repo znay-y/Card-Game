@@ -7,84 +7,40 @@ public class cards {
         print("Cards Games\n");
         Scanner scanner = new Scanner(System.in);
 
-        int [] hand = genCards(scanner);
+        int[] hand = genCards(scanner);
 
         print("\nBefore going to method\n ");
         System.out.println(Arrays.toString(hand));
 
-        showDeck(hand);
+        for(int i =0;i<hand.length;i++){
+            print("Card " + (i+1) + ": " + identifyCard(hand[i]));
+        }
     }
 
-    public static void showDeck(int[] hand) {
-        print("\nYour hand is: ");
-        for (int i = 0; i < hand.length; i++) {
-            int cardID = hand[i];
+    public static String identifyCard(int cardID){
+        String suit="";
 
-            if (cardID <= 54 && cardID >= 41) {
-                if(cardID>=41&&cardID<=51){
-                    print((cardID - 41)+ " of Clubs");
-                }
-                else if(cardID==52){
-                    print("Jack of Clubs");
-                }
-                else if(cardID==53){
-                    print("Queen of Clubs");
-                }
-                else if(cardID==54){
-                    print("King of Clubs");
-                }
-                else if(cardID==55){
-                    print("Ace of Clubs");
-                }
+        if (cardID <= 54 && cardID >= 41) {
+                suit = "Clubs";
             } else if (cardID <= 40 && cardID >= 27) {
-                if(cardID<=37&&cardID>=27){
-                    print((cardID - 27)+ " of Spades");
-                }
-                else if(cardID==38){
-                    print("Jack of Spades");
-                }
-                else if(cardID==39){
-                    print("Queen of Spades");
-                }
-                else if(cardID==40){
-                    print("King of Spades");
-                }
-                else if(cardID==41){
-                    print("Ace of Spades");
-                }
+                suit = "Spades";
             } else if (cardID <= 26 && cardID >= 13) {
-                if(cardID<=23&&cardID>=13){
-                    print((cardID - 13)+ " of Diamonds");
-                }
-                else if(cardID==24){
-                    print("Jack of Diamonds");
-                }
-                else if(cardID==25){
-                    print("Queen of Diamonds");
-                }
-                else if(cardID==26){
-                    print("King of Diamonds");
-                }
-                else if(cardID==27){
-                    print("Ace of Diamonds");
-                }
+                suit = "Diamonds";
             } else if (cardID <= 12 && cardID >= 0) {
-                if(cardID<=10&&cardID>=0){
-                    print((cardID - 0)+ " of Hearts");
-                }
-                else if(cardID==11){
-                    print("Jack of Hearts");
-                }
-                else if(cardID==12){
-                    print("Queen of Hearts");
-                }
-                else if(cardID==13){
-                    print("King of Hearts");
-                }
-                else if(cardID==14){
-                    print("Ace of Hearts");
-                }
+                suit = "Hearts";
             }
+        
+        int newCardID = cardID % 13;
+        if(newCardID == 0){
+            return "Ace of " + suit;
+        } else if(newCardID == 11){
+            return "Jack of " + suit;
+        } else if(newCardID == 12){
+            return "Queen of " + suit;
+        } else if(newCardID == 13){
+            return "King of " + suit;
+        } else {
+            return newCardID + " of " + suit;
         }
     }
 
@@ -131,7 +87,7 @@ public class cards {
 
     public static int[] intArrayAppend(int[] arr, int value) {
         int[] newArr = new int[arr.length + 1];
-        for(int i = 0; i < arr.length; i++) {
+        for (int i = 0; i < arr.length; i++) {
             newArr[i] = arr[i];
         }
         newArr[arr.length] = value;
