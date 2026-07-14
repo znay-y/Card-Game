@@ -37,15 +37,6 @@ Select a game from the main menu.
 - Input validation is limited.
 - The dealer's behaviour is simplified.
 
-### Future Improvements
-- Traditional Blackjack scoring.
-- Additional card games.
-- Improved input validation.
-- Better dealer AI.
-- Card shuffling improvements.
-- Graphical User Interface (GUI).
-- Game statistics and score tracking.
-
 ## Version History
 
 ### Version 1.0
@@ -56,3 +47,11 @@ Select a game from the main menu.
 - Added winner detection.
 - Added console menu system.
 
+### Future Improvements
+- Traditional Blackjack scoring.
+- Additional card games.
+- Improved input validation.
+- Better dealer AI.
+- Card shuffling improvements.
+- Graphical User Interface (GUI).
+- Game statistics and score tracking.
