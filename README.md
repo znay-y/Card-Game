@@ -1,5 +1,7 @@
 # Card Game
 
+## About Program 
+
 This project is a simple game of cards letting the user play a variety of games with a set amount of cards. 
 
 ### Features
