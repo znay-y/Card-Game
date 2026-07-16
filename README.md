@@ -1,81 +1,150 @@
-# Card Game
+# Casino Card Games
 
-## About Program 
+## About
 
-This project is a simple game of cards letting the user play a variety of games with a set amount of cards. 
+Casino Card Games is a Java console application that allows players to choose from multiple card games using a single menu system. The program uses a shared deck of cards and player profile across all games.
 
-### Features
+## Games
 
-- CPU to play against
-- Class to stores data for cards
+### Blackjack
+Play a simplified version of Blackjack against a computer-controlled dealer.
 
-### How to play  
-- Player and dealer are dealt two cards. 
-- Player actions: 
-    - Hit 
-    - Double 
-    - Stand 
-- Dealer automatically draws cards during its turn. 
-- Determines the winner based on the card totals. 
-- Busting (going over 21) results in a loss.
+**Features**
+- Player vs Dealer gameplay
+- Hit
+- Stand
+- Double Down
+- Automatic dealer turns
+- Win, lose, and draw detection
 
-### How to Run
+### Ride the Bus
+Play a simplified version of Ride the Bus by predicting whether the next card will be higher or lower.
 
-Compile the program:
+**Features**
+- Higher or Lower guessing
+- Chip-based gameplay
+- Multiple rounds
+- Shared player profile
+
+---
+
+## Program Features
+
+- Main menu for selecting games
+- Shared player profile
+- Shared card and deck system
+- Computer-controlled opponents
+- Console-based interface
+- Multiple playable games
+
+---
+
+## Program Structure
+
+```
+Casino/
+│── Main.java          # Main menu and program entry point
+│── Blackjack.java     # Blackjack game logic
+│── RideTheBus.java    # Ride the Bus game logic
+│── Card.java          # Card class
+│── Player.java        # Player profile and chip management
+```
+
+---
+
+## How to Play
+
+### Blackjack
+
+1. Select **Blackjack** from the main menu.
+2. Both the player and dealer receive two cards.
+3. Choose one of the following actions:
+   - Hit
+   - Stand
+   - Double Down
+4. The dealer automatically plays their turn.
+5. The winner is determined by comparing hand values.
+
+### Ride the Bus
+
+1. Select **Ride the Bus** from the main menu.
+2. A card is dealt.
+3. Guess whether the next card will be:
+   - Higher
+   - Lower
+4. Continue guessing correctly to progress.
+5. An incorrect guess costs chips.
+
+---
+
+## How to Run
+
+Compile the project:
 
 ```bash
-javac TheCardGames.java
+javac *.java
 ```
+
 Run the program:
+
 ```bash
-java TheCardGames
+java Main
 ```
-Select a game from the main menu.
 
-### Limitations
+Select a game from the main menu to begin playing.
 
+---
+
+## Limitations
+
+### Blackjack
 - Face cards do not use traditional Blackjack values.
-- Aces always have a value of 1.
-- Input validation is limited.
-- The dealer's behaviour is simplified.
+- Aces always count as 1.
+- Dealer AI is simplified.
 
-## Version History
+### General
+- Console interface only.
+- Limited input validation.
+- No save/load functionality.
+- No multiplayer support.
 
-### Version 1.0
-- Initial release.
-- Added a standard 52-card deck.
-- Implemented Blackjack gameplay.
-- Added dealer AI.
-- Added winner detection.
-- Added console menu system.
+---
 
-### Future Improvements
-- Traditional Blackjack scoring.
-- Additional card games.
-- Improved input validation.
-- Better dealer AI.
-- Card shuffling improvements.
-- Graphical User Interface (GUI).
-- Game statistics and score tracking.
-- Chips system for betting.
+# Version History
 
-### Version 1.1
-- Separated Each class into it's own file
-- Added a new game called "Ride the Bus"
-- Added User profile to track chips and name
+## Version 1.0
 
-### Ride The Bus
-- Added a new game called "Ride the Bus"
-- The rules are:
-    - The player is dealt a card and must guess if the next card is higher or lower.
-    - If the player guesses correctly, they can continue to the next round.
-    - If the player guesses incorrectly, they lose a chip.
-    - The game continues until the player either loses all their chips or chooses to quit.
+### Added
+- Initial project release
+- Standard 52-card deck
+- Blackjack game
+- Dealer AI
+- Winner detection
+- Console menu system
 
-### Future Improvements
-- Traditional Blackjack scoring.
-- Improved input validation.
-- Better dealer AI.
-- Card shuffling improvements.
-- Graphical User Interface (GUI).
-- Game statistics and score tracking.
+---
+
+## Version 1.1
+
+### Added
+- Separated each class into its own Java file
+- Ride the Bus game
+- Shared player profile
+- Chip tracking system
+- Main menu supporting multiple games
+
+---
+
+# Future Improvements
+
+- Traditional Blackjack card values
+- Smarter dealer AI
+- Improved input validation
+- Card shuffling animations
+- Additional casino games
+- Save and load player profiles
+- Statistics tracking
+- Betting system
+- Graphical User Interface (GUI)
+- Sound effects
+- Multiplayer support
