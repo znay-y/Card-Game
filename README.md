@@ -57,3 +57,25 @@ Select a game from the main menu.
 - Card shuffling improvements.
 - Graphical User Interface (GUI).
 - Game statistics and score tracking.
+- Chips system for betting.
+
+### Version 1.1
+- Separated Each class into it's own file
+- Added a new game called "Ride the Bus"
+- Added User profile to track chips and name
+
+### Ride The Bus
+- Added a new game called "Ride the Bus"
+- The rules are:
+    - The player is dealt a card and must guess if the next card is higher or lower.
+    - If the player guesses correctly, they can continue to the next round.
+    - If the player guesses incorrectly, they lose a chip.
+    - The game continues until the player either loses all their chips or chooses to quit.
+
+### Future Improvements
+- Traditional Blackjack scoring.
+- Improved input validation.
+- Better dealer AI.
+- Card shuffling improvements.
+- Graphical User Interface (GUI).
+- Game statistics and score tracking.
