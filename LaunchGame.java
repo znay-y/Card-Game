@@ -2,49 +2,46 @@ import java.util.Scanner;
 
 public class LaunchGame {
 
-    public static void main(String[] args){
-Scanner sc = new Scanner(System.in);
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
         int choice = 0;
-        while (choice != 3) {
+        IO.clear();
+        User player = initUser(sc);
+        IO.clear();
+        while (choice != 4) {
+
             printOptions();
-            choice = INTput(sc, "Choses one of the options");
+            choice = IO.INTput(sc, "Choses one of the options");
             if (choice == 1) {
-                Blackjack.main(args);
+                Blackjack.main(args, player);
             } else if (choice == 2) {
-                busGame.main(args);
+                busGame.main(args, player);
             } else if (choice == 3) {
-                print("Thanks for playing");
+                userProfile.main(args, player);
+            } else if (choice == 4) {
+                IO.print("Thanks for playing");
+                IO.clear();
             } else {
-                print("Please pick a valid option");
+                IO.print("Please pick a valid option");
             }
         }
     }
 
+    public static User initUser(Scanner sc) {
+
+        String name = IO.StringPut(sc, "Enter your name: ");
+        User player = new User();
+        player.setName(name);
+        player.setChips(1000);
+        return player;
+    }
+
     public static void printOptions() {
-        System.out.println("=== Welcome to the Card Game! ===");
-        System.out.println("1. Play Blackjack");
-        System.out.println("2. Play Ride the Bus");
-        System.out.println("3. Exit");
+        IO.print("=== Welcome to the Card Game! ===");
+        IO.print("1. Play Blackjack");
+        IO.print("2. Play Ride the Bus");
+        IO.print("3. User Profile");
+        IO.print("4. Exit");
     }
 
-     public static void print(String output) {
-        System.out.println(output);
-    }
-
-    public static void print(int value) {
-        System.out.println(value);
-    }
-
-    public static int INTput(Scanner sc, String message) {
-        print(message);
-        String input = sc.nextLine();
-        int num = Integer.parseInt(input);
-        return num;
-    }
-
-    public static String StringPut(Scanner sc, String message) {
-        print(message);
-        String input = sc.nextLine();
-        return input;
-    }
 }
