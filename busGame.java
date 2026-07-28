@@ -19,124 +19,128 @@ public class busGame {
             if (choice == 1) {
                 rideTheBus(sc, cards);
             } else if (choice == 2) {
-            IO.print("Thanks for playing");
+                IO.print("Thanks for playing");
             } else {
                 IO.print("Please pick a valid option");
             }
         }
     }
 
-    public static void rideTheBus(Scanner sc, ArrayList<cards> cards) {
+    public static void rideTheBus(Scanner sc, ArrayList<cards> deck) {
         /*
-         * 1. Give user a card
+         * 1. Give cpu a card each round
          * 2. Ask red or black
          * 3. get new card then ask higher or lower
          * 4. get a new card and ask inside or outside
          * 5. get a new card and ask what suit
          */
 
-        ArrayList<cards> house = new ArrayList<cards>();
-        boolean gameOver = false;
-
-        while (!gameOver) {
-            IO.print("Welcome to Ride the Bus!");
-            IO.print("How many chips are you betting");
-
-            house.add(pickupCard(cards));
-
-            // round 1
-            IO.print("The house pikced a card");
-            IO.print("Guess if the card is red or black");
-
-            String colorGuess = IO.StringPut(sc, "Enter your guess (red or black): ");
-
-            if (colorGuess.equalsIgnoreCase("red")) {
-                IO.print("Correct! The card was " + house.get(0).getName() + " of " + house.get(0).getSuit());
-            } else if (colorGuess.equalsIgnoreCase("black")) {
-                IO.print("Correct! The card was " + house.get(0).getName() + " of " + house.get(0).getSuit());
-            } else {
-                IO.print("Incorrect! The card was " + house.get(0).getName() + " of " + house.get(0).getSuit());
-                gameOver = true;
+        ArrayList<cards> house = new ArrayList<>();
+        int round = 1;
+        while (round != -1) {
+            if (round == 1) {
+                round = round1(deck,house, round, sc);
+            } else if (round == 2) {
+                round = round2(deck,house, round, sc);
+            } else if (round == 3) {
+                round = round3(deck,house, round, sc);
+            } else if (round == 4) {
+                round = round4(deck,house, round, sc);
             }
 
-            IO.print("Before round 2 begins. You can choose to continue or quit. If you quit, you will take your chips");
-            String continueGame = IO.StringPut(sc, "Enter 'continue' to play on or 'quit' to quit: ");
-            if (continueGame.equalsIgnoreCase("quit")) {
-                gameOver = true;
-            }
-            // round 2 - Pick a new card and ask higher or lower
-            house.add(pickupCard(cards));
-            IO.print("The house picked a new card");
-            IO.print("Guess if the new card is higher or lower than the previous card");
-            String hlGuess = IO.StringPut(sc, "Enter your guess (higher or lower): ");
-
-            if (hlGuess.equalsIgnoreCase("higher")) {
-                if (house.get(1).getValue() > house.get(0).getValue()) {
-                    IO.print("Correct! The new card was " + house.get(1).getName() + " of " + house.get(1).getSuit());
-                } else {
-                    IO.print("Incorrect! The new card was " + house.get(1).getName() + " of " + house.get(1).getSuit());
-                    gameOver = true;
-                }
-            } else if (hlGuess.equalsIgnoreCase("lower")) {
-                if (house.get(1).getValue() < house.get(0).getValue()) {
-                    IO.print("Correct! The new card was " + house.get(1).getName() + " of " + house.get(1).getSuit());
-                } else {
-                    IO.print("Incorrect! The new card was " + house.get(1).getName() + " of " + house.get(1).getSuit());
-                    gameOver = true;
-                }
-            } else {
-                IO.print("Invalid guess. Please enter 'higher' or 'lower'.");
-            }
-
-            // round 3 - Pick a new card and ask inside or outside
-            house.add(pickupCard(cards));
-            IO.print("The house picked a new card");
-            IO.print("Guess if the new card is inside or outside the range of the previous two cards");
-            String ioGuess = IO.StringPut(sc, "Enter your guess (inside or outside): ");
-
-            if (ioGuess.equalsIgnoreCase("inside")) {
-                if ((house.get(1).getValue() > house.get(0).getValue()
-                        && house.get(2).getValue() < house.get(1).getValue()
-                        && house.get(2).getValue() > house.get(0).getValue()) ||
-                        (house.get(1).getValue() < house.get(0).getValue()
-                                && house.get(2).getValue() > house.get(1).getValue()
-                                && house.get(2).getValue() < house.get(0).getValue())) {
-                    IO.print("Correct! The new card was " + house.get(2).getName() + " of " + house.get(2).getSuit());
-                } else {
-                    IO.print("Incorrect! The new card was " + house.get(2).getName() + " of " + house.get(2).getSuit());
-                    gameOver = true;
-                }
-            } else if (ioGuess.equalsIgnoreCase("outside")) {
-                if ((house.get(1).getValue() > house.get(0).getValue()
-                        && (house.get(2).getValue() > house.get(1).getValue()
-                                || house.get(2).getValue() < house.get(0).getValue()))
-                        ||
-                        (house.get(1).getValue() < house.get(0).getValue()
-                                && (house.get(2).getValue() < house.get(1).getValue()
-                                        || house.get(2).getValue() > house.get(0).getValue()))) {
-                    IO.print("Correct! The new card was " + house.get(2).getName() + " of " + house.get(2).getSuit());
-                } else {
-                    IO.print("Incorrect! The new card was " + house.get(2).getName() + " of " + house.get(2).getSuit());
-                    gameOver = true;
-                }
-            } else {
-                IO.print("Invalid guess. Please enter 'inside' or 'outside'.");
-            }
-
-            // round 4 - Pick a new card and ask what suit
-            house.add(pickupCard(cards));
-            IO.print("The house picked a new card");
-            IO.print("Guess the suit of the new card");
-            String suitGuess = IO.StringPut(sc, "Enter your guess (Spades, Hearts, Diamonds, Clubs): ");
-
-            if (suitGuess.equalsIgnoreCase(house.get(3).getSuit())) {
-                IO.print("Correct! The new card was " + house.get(3).getName() + " of " + house.get(3).getSuit());
-            } else {
-                IO.print("Incorrect! The new card was " + house.get(3).getName() + " of " + house.get(3).getSuit());
-                gameOver = true;
-            }
         }
 
+    }
+
+    public static int round1(ArrayList<cards> deck, ArrayList<cards> house, int round, Scanner sc) {
+        IO.print("Round 1");
+        house.add(pickupCard(deck));
+
+        String colChoice = IO.StringPut(sc, "Red or Black?");
+
+        cards current = house.get(0);
+        if (colChoice.equalsIgnoreCase("RED")) {
+            if (current.suit.equals("Diamonds") || current.suit.equals("Hearts")) {
+                IO.print("good");
+                IO.print("The card picked was " + CardID(current));
+                return 2;
+            } else {
+                IO.print("bad");
+                IO.print("The card picked was " + CardID(current));
+
+                return -1;
+            }
+        } else if (colChoice.equalsIgnoreCase("Black")) {
+            if (current.suit.equals("Spades") || current.suit.equals("Clubs")) {
+                IO.print("good");
+                IO.print("The card picked was " + CardID(current));
+
+                return 2;
+
+            } else {
+                IO.print("bad");
+                IO.print("The card picked was " + CardID(current));
+
+                return -1;
+            }
+        } else {
+            IO.print(
+                    "Something went wrong please try contacting the support helpdesk for an official report on your issue");
+            return -1;
+        }
+
+    }
+
+    public static int round2(ArrayList<cards> deck, ArrayList<cards> house, int round, Scanner sc) {
+        IO.print("Round 2");
+        house.add(pickupCard(deck));
+
+        IO.print("The last card was: " + CardID(house.get(0)));
+
+        String highLowChoice = IO.StringPut(sc, "Is the new card higher or lower");
+
+        cards first = house.get(0);
+        cards second = house.get(1);
+
+        if (highLowChoice.equalsIgnoreCase("higher")) {
+            if (first.getValue() < second.getValue()) {
+                IO.print("ok");
+                return 3;
+            } else if (first.getValue() > second.getValue()) {
+                IO.print("what are you doing?");
+                return -1;
+            } else {
+                IO.print("It's a tie");
+                return -1;
+            }
+        } else if (highLowChoice.equalsIgnoreCase("lower")) {
+            if (first.getValue() < second.getValue()) {
+                IO.print("what?");
+                return -1;
+            } else if (first.getValue() > second.getValue()) {
+                IO.print("ok");
+                return 3;
+            } else {
+                IO.print("It's a tie");
+                return -1;
+            }
+        } else {
+            IO.print(
+                    "Something went wrong please try contacting the support helpdesk for an official report on your issue");
+            return -1;
+        }
+    }
+
+    public static int round3(ArrayList<cards> deck, ArrayList<cards> house, int round, Scanner sc) {
+        IO.print("Round 3");
+        house.add(pickupCard(deck));
+        return 4;
+    }
+
+    public static int round4(ArrayList<cards> deck, ArrayList<cards> house, int round, Scanner sc) {
+        IO.print("Round 4");
+        house.add(pickupCard(deck));
+        return -1;
     }
 
     public static cards pickupCard(ArrayList<cards> deck) {
@@ -167,5 +171,9 @@ public class busGame {
         IO.print("2. Exit");
     }
 
+    public static String CardID(cards c) {
+        String fullname = c.name + " of " + c.suit;
+        return fullname;
+    }
 
 }

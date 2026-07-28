@@ -9,7 +9,7 @@ public class LaunchGame {
         User player = initUser(sc);
         IO.clear();
         while (choice != 4) {
-
+            IO.clear();
             printOptions();
             choice = IO.INTput(sc, "Choses one of the options");
             if (choice == 1) {
@@ -17,7 +17,7 @@ public class LaunchGame {
             } else if (choice == 2) {
                 busGame.main(args, player);
             } else if (choice == 3) {
-                userProfile.main(args, player);
+                userProfile.main(args, player,sc);
             } else if (choice == 4) {
                 IO.print("Thanks for playing");
                 IO.clear();

@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+
 /*
 
 Fixes or later: 
 - Make it so aces can be 1 or 11
-- When bust lose straight away
 
 */
 public class Blackjack {
@@ -60,33 +60,44 @@ public class Blackjack {
             } else if (choice == 2) {
                 playerCards.add(pickupCard(deck));
                 end = true;
+                IO.print("The CPU will now take their turn");
+                sc.nextLine();
+                IO.clear();
+                cpuTurn(dealer, playerCards, deck, sc);
             } else if (choice == 3) {
                 end = true;
+                IO.print("The CPU will now take their turn");
+                sc.nextLine();
+                IO.clear();
+                cpuTurn(dealer, playerCards, deck, sc);
             } else {
                 IO.print("Please pick a valid option");
             }
-            //Go bust
+            // Go bust
             if (numbersTotal(playerCards) > 21) {
                 end = true;
+                IO.print("You went bust and automatically lose");
+                showYourDeck(playerCards);
+                showHouseDeck(dealer);
+                IO.print("Press enter to continue");
+                sc.nextLine();
+                IO.clear();
             }
         }
-        IO.print("The CPU will now take their turn");
-        sc.nextLine();
-        IO.clear();
-        cpuTurn(dealer, playerCards, deck, sc);
-        whoWon(playerCards, dealer, player, betAmount);
+
+        whoWon(playerCards, dealer, player, betAmount, sc);
 
     }
 
     public static int setbet(Scanner sc, User player) {
         int betAmount = IO.INTput(sc, "How many chips are you betting");
 
-        while (betAmount < 0 || betAmount > player.getChips()) {
+        while (betAmount <= 0 || betAmount > player.getChips()) {
 
             if (betAmount > player.getChips()) {
                 IO.print("You cannot bet more than you have");
-            } else if (betAmount < 0) {
-                IO.print("You cannot bet a negative amount");
+            } else if (betAmount <= 0) {
+                IO.print("You cannot bet a non-positive amount");
             }
             betAmount = IO.INTput(sc, "How many chips are you betting");
         }
@@ -98,7 +109,7 @@ public class Blackjack {
         IO.print("Keep picking up cards until you hit 21 or less");
         IO.print("IF you end turn when under 21 cpu picks up ");
         IO.print("Who ever is the closet wins");
-        IO.print("Press Enter to contiune");
+        IO.print("\nPress Enter to contiune");
         sc.nextLine();
         IO.clear();
     }
@@ -144,34 +155,43 @@ public class Blackjack {
         IO.print("2. Quit\n");
     }
 
-    public static void whoWon(ArrayList<cards> playerCards, ArrayList<cards> dealer, User player, int betAmount) {
+    public static void whoWon(ArrayList<cards> playerCards, ArrayList<cards> dealer, User player, int betAmount,
+            Scanner sc) {
         IO.clear();
-        IO.print("==So Who Won==");
+        IO.print("==So Who Won==\n");
         if (numbersTotal(playerCards) > 21) {
-            IO.print("You bust they win");
+            IO.print("You bust they win\n");
             player.setChips(player.getChips() - betAmount);
         } else if (numbersTotal(dealer) > 21) {
-            IO.print("Dealer bust you win");
+            IO.print("Dealer bust you win\n");
             player.setChips(player.getChips() + betAmount);
         } else {
             if (numbersTotal(dealer) > numbersTotal(playerCards)) {
-                IO.print("\nThey win\n");
+                IO.print("They win\n");
                 player.setChips(player.getChips() - betAmount);
             } else if (numbersTotal(dealer) == numbersTotal(playerCards)) {
-                IO.print("\nTie\n");
+                IO.print("Tie\n");
             } else {
-                IO.print("\nYou win\n");
+                IO.print("You win\n");
                 player.setChips(player.getChips() + betAmount);
             }
         }
 
+        IO.print("Press enter to move to return to the main menu");
+        sc.nextLine();
+        IO.clear();
     }
 
-    public static void cpuTurn(ArrayList<cards> dealer, ArrayList<cards> playerCards, ArrayList<cards> deck, Scanner sc) {
+    public static void cpuTurn(ArrayList<cards> dealer, ArrayList<cards> playerCards, ArrayList<cards> deck,
+            Scanner sc) {
         // IO.print("\n==CPU's Turn==\n");
         boolean cont = true;
         while (numbersTotal(dealer) < 21 && cont) {
+            IO.print("Press enter to move to the next turn");
+            sc.nextLine();
+            IO.clear();
             dealer.add(pickupCard(deck));
+            showYourDeck(playerCards);
             showHouseDeck(dealer);
 
             if (numbersTotal(dealer) == 21) {
@@ -182,6 +202,7 @@ public class Blackjack {
                 // IO.print("CPU wins");
                 cont = false;
             }
+
         }
 
         IO.print("Press enter to see the results");
@@ -194,7 +215,25 @@ public class Blackjack {
 
         int total = 0;
         for (int i = 0; i < nums.size(); i++) {
-            total = total + nums.get(i).getValue();
+            String current = nums.get(i).getName();
+            if (current.equals("Jack") || current.equals("Queen") || current.equals("King")) {
+                total += 10;
+            } else if (current.equals("Ace")) {
+                total += 11;
+            } else {
+                total = total + nums.get(i).getValue();
+            }
+        }
+
+        if (total > 21) {
+            for (int i = 0; i < nums.size(); i++) {
+                String current = nums.get(i).getName();
+                if (current.equals("Ace")){
+                    total-=10;
+                }
+
+
+            }
         }
         return total;
     }
