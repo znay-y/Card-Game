@@ -122,8 +122,6 @@ Select a game from the main menu to begin playing.
 - Winner detection
 - Console menu system
 
----
-
 ## Version 1.1
 
 ### Added
@@ -132,8 +130,6 @@ Select a game from the main menu to begin playing.
 - Shared player profile
 - Chip tracking system
 - Main menu supporting multiple games
-
----
 
 ### Future Improvements
 
@@ -158,11 +154,24 @@ Select a game from the main menu to begin playing.
 - Traditional Blackjack card values
 - Betting system with chips
 
-# Future Improvements
+### Future Improvements
 
 - Improved input validation
 - Additional casino games
 - Save and load player profiles
 - Graphical User Interface (GUI)
-- Sound effects
-- Multiplayer support
+
+## Version 1.3 
+
+### Added 
+
+- New Game: Ride the bus 
+- Revamp for main menus 
+- Profile outputs from the User class
+- Visual improvements to the console interface
+- Consistent main menus between games
+
+### Future Improvements
+- Improved input validation (Different data types)
+- Additional casino games
+- Save and load player profiles externally
