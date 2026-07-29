@@ -13,8 +13,13 @@ public class IO {
     public static int INTput(Scanner sc, String message) {
         print(message);
         String input = sc.nextLine();
-        int num = Integer.parseInt(input);
-        return num;
+        try {
+            Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            print("Please enter a valid integer");
+            return INTput(sc, message);
+        }
+        return Integer.parseInt(input);
     }
 
     public static String StringPut(Scanner sc, String message) {
