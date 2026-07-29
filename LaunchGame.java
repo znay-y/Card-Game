@@ -39,7 +39,7 @@ public class LaunchGame {
     public static void printOptions() {
         IO.print("=== Welcome to the Card Game! ===");
         IO.print("1. Play Blackjack");
-        IO.print("2. Play Ride the Bus");
+        IO.print("2. Play Ride the Bus (Not Working)");
         IO.print("3. User Profile");
         IO.print("4. Exit");
     }

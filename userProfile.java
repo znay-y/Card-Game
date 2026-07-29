@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class userProfile {
-    public static void main(String[] args, User player,Scanner sc) {
+    public static void main(String[] args, User player, Scanner sc) {
 
         IO.clear();
         IO.print("User Profile");

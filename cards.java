@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 class cards {
+    
     int ID;
     int value;
     String suit;
