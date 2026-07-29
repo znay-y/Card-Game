@@ -228,10 +228,9 @@ public class Blackjack {
         if (total > 21) {
             for (int i = 0; i < nums.size(); i++) {
                 String current = nums.get(i).getName();
-                if (current.equals("Ace")){
-                    total-=10;
+                if (current.equals("Ace")) {
+                    total -= 10;
                 }
-
 
             }
         }
