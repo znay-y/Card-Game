@@ -17,7 +17,7 @@ public class LaunchGame {
             } else if (choice == 2) {
                 busGame.main(args, player);
             } else if (choice == 3) {
-                userProfile.main(args, player,sc);
+                player.profile(sc);
             } else if (choice == 4) {
                 IO.print("Thanks for playing");
                 IO.clear();
@@ -39,7 +39,7 @@ public class LaunchGame {
     public static void printOptions() {
         IO.print("=== Welcome to the Card Game! ===");
         IO.print("1. Play Blackjack");
-        IO.print("2. Play Ride the Bus (Not Working)");
+        IO.print("2. Play Ride the Bus");
         IO.print("3. User Profile");
         IO.print("4. Exit");
     }
