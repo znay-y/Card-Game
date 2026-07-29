@@ -22,12 +22,16 @@ public class Blackjack {
 
         int choice = 0;
         IO.clear();
-        while (choice != 2) {
+        while (choice != 4) {
             printOptions();
             choice = IO.INTput(sc, "Choses one of the options");
             if (choice == 1) {
                 blackjackGame(playerCards, dealer, sc, player);
             } else if (choice == 2) {
+                player.profile(sc);
+            } else if (choice == 3) {
+                printBlackjackRules(sc);
+            } else if (choice == 4) {
                 IO.print("Thanks for playing");
             } else {
                 IO.print("Please pick a valid option");
@@ -35,10 +39,29 @@ public class Blackjack {
         }
     }
 
-    public static void blackjackGame(ArrayList<cards> playerCards, ArrayList<cards> dealer, Scanner sc, User player) {
-        int betAmount = setbet(sc, player);
+    public static void printOptions() {
+        IO.print("==Main Menu==\n");
+        IO.print("1. Blackjack");
+        IO.print("2. User profile");
+        IO.print("3. Rules");
+        IO.print("4. Exit\n");
+    }
+
+    public static void printBlackjackRules(Scanner sc) {
         IO.clear();
-        printBlackjackRules(sc);
+        IO.print("==Blackjack==");
+        IO.print("Keep picking up cards until you hit 21 or less");
+        IO.print("IF you end turn when under 21 cpu picks up ");
+        IO.print("Who ever is the closet wins");
+        IO.print("\nPress Enter to contiune");
+        sc.nextLine();
+        IO.clear();
+    }
+
+    public static void blackjackGame(ArrayList<cards> playerCards, ArrayList<cards> dealer, Scanner sc, User player) {
+        IO.clear();
+        int betAmount = player.setbet(sc);
+        IO.clear();
         ArrayList<cards> deck = cards.loadDeckCards();
         playerCards.clear();
         dealer.clear();
@@ -54,21 +77,19 @@ public class Blackjack {
             choice = IO.INTput(sc, "\nChoose one of the options\n");
             if (choice == 1) {
                 playerCards.add(pickupCard(deck));
-                IO.print("You picked up a card");
                 IO.clear();
-
             } else if (choice == 2) {
                 playerCards.add(pickupCard(deck));
+                betAmount *= 2;
                 end = true;
-                IO.print("The CPU will now take their turn");
-                sc.nextLine();
                 IO.clear();
+                showYourDeck(playerCards);
+                showHouseDeck(dealer);
+                IO.print("The CPU will now take their turn");
                 cpuTurn(dealer, playerCards, deck, sc);
             } else if (choice == 3) {
                 end = true;
                 IO.print("The CPU will now take their turn");
-                sc.nextLine();
-                IO.clear();
                 cpuTurn(dealer, playerCards, deck, sc);
             } else {
                 IO.print("Please pick a valid option");
@@ -87,31 +108,6 @@ public class Blackjack {
 
         whoWon(playerCards, dealer, player, betAmount, sc);
 
-    }
-
-    public static int setbet(Scanner sc, User player) {
-        int betAmount = IO.INTput(sc, "How many chips are you betting");
-
-        while (betAmount <= 0 || betAmount > player.getChips()) {
-
-            if (betAmount > player.getChips()) {
-                IO.print("You cannot bet more than you have");
-            } else if (betAmount <= 0) {
-                IO.print("You cannot bet a non-positive amount");
-            }
-            betAmount = IO.INTput(sc, "How many chips are you betting");
-        }
-        return betAmount;
-    }
-
-    public static void printBlackjackRules(Scanner sc) {
-        IO.print("==Blackjack==");
-        IO.print("Keep picking up cards until you hit 21 or less");
-        IO.print("IF you end turn when under 21 cpu picks up ");
-        IO.print("Who ever is the closet wins");
-        IO.print("\nPress Enter to contiune");
-        sc.nextLine();
-        IO.clear();
     }
 
     public static void setupBlackjack(ArrayList<cards> card, ArrayList<cards> dealer, ArrayList<cards> deck) {
@@ -149,12 +145,6 @@ public class Blackjack {
         IO.print("\n1.Hit\n2.Double\n3.Stand");
     }
 
-    public static void printOptions() {
-        IO.print("==Main Menu==\n");
-        IO.print("1. Blackjack");
-        IO.print("2. Quit\n");
-    }
-
     public static void whoWon(ArrayList<cards> playerCards, ArrayList<cards> dealer, User player, int betAmount,
             Scanner sc) {
         IO.clear();
@@ -176,6 +166,8 @@ public class Blackjack {
                 player.setChips(player.getChips() + betAmount);
             }
         }
+
+        IO.print("This means that you now have: " + player.getChips() + " chips in your account");
 
         IO.print("Press enter to move to return to the main menu");
         sc.nextLine();
@@ -235,14 +227,6 @@ public class Blackjack {
             }
         }
         return total;
-    }
-
-    public static void printGameRules() {
-        IO.print("\n==Game==\n");
-        IO.print("Keep picking up cards until you hit 21 or less");
-        IO.print("IF you end turn when under 21 cpu picks up ");
-        IO.print("Who ever is the closet wins");
-        IO.print("Yes this is just blackjack but with differnet numbers\n");
     }
 
     public static cards pickupCard(ArrayList<cards> deck) {
