@@ -135,7 +135,7 @@ Select a game from the main menu to begin playing.
 
 ---
 
-# Future Improvements
+### Future Improvements
 
 - Traditional Blackjack card values
 - Smarter dealer AI
@@ -145,6 +145,24 @@ Select a game from the main menu to begin playing.
 - Save and load player profiles
 - Statistics tracking
 - Betting system
+- Graphical User Interface (GUI)
+- Sound effects
+- Multiplayer support
+
+## Version 1.2
+
+### Added
+- New Files for IO and user profile
+- Game launches from LaunchGame.java
+- Visual improvements to the console interface
+- Traditional Blackjack card values
+- Betting system with chips
+
+# Future Improvements
+
+- Improved input validation
+- Additional casino games
+- Save and load player profiles
 - Graphical User Interface (GUI)
 - Sound effects
 - Multiplayer support
