@@ -26,4 +26,5 @@ class User {
     public void setCurrentBet(int currentBet) {
         this.currentBet = currentBet;
     }
+    
 }
