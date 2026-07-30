@@ -1,12 +1,15 @@
-import java.util.Scanner;
+import java.util.*;
+import java.io.*;
 
 public class LaunchGame {
 
     public static void main(String[] args) {
+        // IO.clear();
+        ArrayList<User> extractedSaves = new ArrayList<User>();
         Scanner sc = new Scanner(System.in);
         int choice = 0;
-        IO.clear();
-        User player = initUser(sc);
+
+        User player = introScreen(sc, extractedSaves);
         IO.clear();
         while (choice != 4) {
             IO.clear();
@@ -19,6 +22,7 @@ public class LaunchGame {
             } else if (choice == 3) {
                 player.profile(sc);
             } else if (choice == 4) {
+                saveGame(player);
                 IO.print("Thanks for playing");
                 IO.clear();
             } else {
@@ -27,13 +31,74 @@ public class LaunchGame {
         }
     }
 
-    public static User initUser(Scanner sc) {
+    public static User introScreen(Scanner sc, ArrayList<User> extractedSaves) {
+        IO.clear();
+        File localSave = new File("saves/profiles.csv");
+        int choice = IO.INTput(sc, "Chose one of the following options:\n1. Load a save\n2. Create a new save");
+        User player = null;
 
-        String name = IO.StringPut(sc, "Enter your name: ");
-        User player = new User();
-        player.setName(name);
-        player.setChips(1000);
+        while (choice != 1 && choice != 2) {
+            IO.print("Please pick a valid option");
+            choice = IO.INTput(sc, "Chose one of the following options:\n1. Load a save\n2. Create a new save");
+        }
+
+        if (choice == 1) {
+            try {
+                Scanner myReader = new Scanner(localSave);
+                IO.clear();
+                IO.print("\nChose one of the following save\n");
+                while (myReader.hasNextLine()) {
+                    String data = myReader.nextLine();
+                    String[] people = data.split(",");
+                    String saveID = people[0];
+                    String name = people[1];
+                    String chips = people[2];
+                    // IO.print("Save ID: " + saveID + " - Name: " + name + " - Chips: " + chips);
+                    extractedSaves.add(new User(name, chips, saveID));
+                }
+                myReader.close();
+                player = loadSave(sc, extractedSaves);
+            } catch (FileNotFoundException e) {
+                System.out.println("An error occurred.");
+            }
+        } else if (choice == 2) {
+            String name = IO.StringPut(sc, "Enter your name: ");
+            player = new User(name, "1000");
+        }
+
+        IO.print("Press enter to continue");
+        sc.nextLine();
         return player;
+
+    }
+
+    public static User loadSave(Scanner sc, ArrayList<User> extractedSaves) {
+        for (int i = 0; i < extractedSaves.size(); i++) {
+            IO.print((i + 1) + ". " + extractedSaves.get(i).getName() + " - " + extractedSaves.get(i).getChips()
+                    + " chips");
+        }
+        int saveChoice = IO.INTput(sc, "Chose one of the saves");
+        while (saveChoice <= 0 || saveChoice > extractedSaves.size()) {
+            IO.print("Please pick a valid option");
+            saveChoice = IO.INTput(sc, "Chose one of the saves");
+        }
+        return extractedSaves.get(saveChoice - 1);
+    }
+
+    public static void saveGame(User player) {
+        try {
+            FileWriter myWriter = new FileWriter("saves/profiles.csv", true);
+            BufferedReader reader = new BufferedReader(new FileReader("saves/profiles.csv"));
+            int newID = 0;
+            while (reader.readLine() != null)
+                newID++;
+            reader.close();
+            myWriter.write((newID + 1) + "," + player.getName() + "," + player.getChips() + "\n");
+            myWriter.close();
+            IO.print("Successfully saved game.");
+        } catch (IOException e) {
+            IO.print("An error occurred.");
+        }
     }
 
     public static void printOptions() {
@@ -41,7 +106,7 @@ public class LaunchGame {
         IO.print("1. Play Blackjack");
         IO.print("2. Play Ride the Bus");
         IO.print("3. User Profile");
-        IO.print("4. Exit");
+        IO.print("4. Save and Exit");
     }
 
 }

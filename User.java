@@ -4,6 +4,18 @@ class User {
     String name;
     int chips;
     int currentBet;
+    int saveID;
+
+    public User(String name, String chips, String saveID) {
+        this.name = name;
+        this.chips = Integer.parseInt(chips);
+        this.saveID = Integer.parseInt(saveID);
+    }
+
+     public User(String name, String chips) {
+        this.name = name;
+        this.chips = Integer.parseInt(chips);
+    }
 
     public String getName() {
         return name;

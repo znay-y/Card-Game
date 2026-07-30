@@ -29,7 +29,7 @@ public class IO {
     }
 
     public static void clear() {
-        System.out.print("\033[H\033[2J");
+        print("\033[H\033[2J\033[3J");
         System.out.flush();
     }
 
