@@ -175,3 +175,16 @@ Select a game from the main menu to begin playing.
 - Improved input validation (Different data types)
 - Additional casino games
 - Save and load player profiles externally
+
+## Version 1.4
+
+### Added 
+
+- Saving and loading player multiple player profiles using a csv file
+- Allows for names and chip values to be stored together
+
+
+### Future Improvements
+- Improved input validation (Different data types)
+- Additional casino games
+

@@ -50,11 +50,11 @@ public class LaunchGame {
                 while (myReader.hasNextLine()) {
                     String data = myReader.nextLine();
                     String[] people = data.split(",");
-                    String saveID = people[0];
-                    String name = people[1];
-                    String chips = people[2];
+                    //String saveID = people[0];
+                    String name = people[0];
+                    String chips = people[1];
                     // IO.print("Save ID: " + saveID + " - Name: " + name + " - Chips: " + chips);
-                    extractedSaves.add(new User(name, chips, saveID));
+                    extractedSaves.add(new User(name, chips));
                 }
                 myReader.close();
                 player = loadSave(sc, extractedSaves);
@@ -77,23 +77,21 @@ public class LaunchGame {
             IO.print((i + 1) + ". " + extractedSaves.get(i).getName() + " - " + extractedSaves.get(i).getChips()
                     + " chips");
         }
+
+        
         int saveChoice = IO.INTput(sc, "Chose one of the saves");
         while (saveChoice <= 0 || saveChoice > extractedSaves.size()) {
             IO.print("Please pick a valid option");
             saveChoice = IO.INTput(sc, "Chose one of the saves");
         }
+        IO.csvRemover("saves/profiles.csv", saveChoice);
         return extractedSaves.get(saveChoice - 1);
     }
 
     public static void saveGame(User player) {
         try {
             FileWriter myWriter = new FileWriter("saves/profiles.csv", true);
-            BufferedReader reader = new BufferedReader(new FileReader("saves/profiles.csv"));
-            int newID = 0;
-            while (reader.readLine() != null)
-                newID++;
-            reader.close();
-            myWriter.write((newID + 1) + "," + player.getName() + "," + player.getChips() + "\n");
+            myWriter.write(player.getName() + "," + player.getChips() + "\n");
             myWriter.close();
             IO.print("Successfully saved game.");
         } catch (IOException e) {
