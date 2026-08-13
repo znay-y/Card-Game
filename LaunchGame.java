@@ -11,7 +11,7 @@ public class LaunchGame {
 
         User player = introScreen(sc, extractedSaves);
         IO.clear();
-        while (choice != 4) {
+        while (choice != 6) {
             IO.clear();
             printOptions();
             choice = IO.INTput(sc, "Choses one of the options");
@@ -22,6 +22,10 @@ public class LaunchGame {
             } else if (choice == 3) {
                 player.profile(sc);
             } else if (choice == 4) {
+                poker.main(args, player);
+            } else if (choice == 5) {
+                theCardGame.main(args,player);
+            } else if (choice == 6) {
                 saveGame(player);
                 IO.print("Thanks for playing");
                 IO.clear();

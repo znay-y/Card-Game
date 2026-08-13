@@ -51,7 +51,7 @@ public class Blackjack {
         IO.clear();
         IO.print("==Blackjack==");
         IO.print("Keep picking up cards until you hit 21 or less");
-        IO.print("IF you end turn when under 21 cpu picks up ");
+        IO.print("IF you end turn when under 21 cpu picks up");
         IO.print("Who ever is the closet wins");
         IO.print("\nPress Enter to contiune");
         sc.nextLine();

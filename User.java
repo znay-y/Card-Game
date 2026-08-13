@@ -52,7 +52,7 @@ class User {
         sc.nextLine();
         IO.clear();
     }
-
+//Differs from setcurrentbet cause it is for initial bets so has validation
     public int setbet(Scanner sc) {
         int betAmount = IO.INTput(sc, "How many chips are you betting");
 
