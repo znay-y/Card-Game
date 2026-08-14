@@ -2,54 +2,47 @@ import java.util.ArrayList;
 
 public class checking {
     public static void main(String[] args) {
-        String[] testValues = {
-                "Ace", "Two", "Three", "Four", "Five",
-                "Six", "Seven", "Eight", "Nine", "Ten"
-        };
+        ArrayList<cards> deck = cards.loadDeckCards();
 
-        String[] testSuits = {
-                "Spades", "Hearts", "Diamonds", "Clubs", "Spades",
-                "Hearts", "Diamonds", "Clubs", "Spades", "Hearts"
-        };
+        ArrayList<cards> royalFlush = new ArrayList<>();
 
-        checkValue(testValues);
-        // Ace: 1, Two: 1, Three: 1, Four: 1, Five: 1,
-        // Six: 1, Seven: 1, Eight: 1, Nine: 1, Ten: 1
+        royalFlush.add(deck.get(9)); // Ten of Spades
+        royalFlush.add(deck.get(10)); // Jack of Spades
+        royalFlush.add(deck.get(11)); // Queen of Spades
+        royalFlush.add(deck.get(12)); // King of Spades
+        royalFlush.add(deck.get(0)); // Ace of Spades
 
-        checkHand(testSuits);
-        // Spades: 3, Hearts: 3, Diamonds: 2, Clubs: 2
+        IO.print("Hand found: " + checkHand(royalFlush));
+
     }
 
-    public static void checkHand(String[] originalDeck) {
-        IO.print("\n== New Deck Suits ==\n");
-
-        /*
-         * 1. Count numbers
-         * 2. Count Suits
-         * 3. Check requirments for hands
-         */
+    public static int[] checkSuits(ArrayList<cards> originalDeck) {
+        // IO.print("\n== New Deck Suits ==\n");
         String[] suits = { "Spades", "Hearts", "Diamonds", "Clubs" };
         int[] suitsCount = { 0, 0, 0, 0 };
-        IO.print("Here");
+        // IO.print("Here");
         // Numbers/Value check
         if (originalDeck != null) {
             for (int j = 0; j < suits.length; j++) {
-                for (int i = 0; i < originalDeck.length; i++) {
-                    if (suits[j].equals(originalDeck[i])) {
+                for (int i = 0; i < originalDeck.size(); i++) {
+                    if (suits[j].equals(originalDeck.get(i).getSuit())) {
                         suitsCount[j]++;
                     }
                 }
             }
         }
 
-        IO.print(suits[0] + " - " + suitsCount[0]);
-        IO.print(suits[1] + " - " + suitsCount[1]);
-        IO.print(suits[2] + " - " + suitsCount[2]);
-        IO.print(suits[3] + " - " + suitsCount[3]);
+        for (int i = 0; i < suits.length; i++) {
+            if (suitsCount[i] > 0) {
+                // IO.print(suits[i] + " - " + suitsCount[i]);
+            }
+        }
+
+        return suitsCount;
     }
 
-    public static void checkValue(String[] originalDeck) {
-        IO.print("\n== New Deck Value ==\n");
+    public static int[] checkValue(ArrayList<cards> originalDeck) {
+        // IO.print("\n== New Deck Value ==\n");
 
         String[] values = { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack",
                 "Queen", "King" };
@@ -57,8 +50,8 @@ public class checking {
         // Numbers/Value check
         if (originalDeck != null) {
             for (int j = 0; j < values.length; j++) {
-                for (int i = 0; i < originalDeck.length; i++) {
-                    if (values[j].equals(originalDeck[i])) {
+                for (int i = 0; i < originalDeck.size(); i++) {
+                    if (values[j].equals(originalDeck.get(i).getName())) {
                         valueCount[j]++;
                     }
                 }
@@ -67,10 +60,89 @@ public class checking {
         }
         for (int i = 0; i < values.length; i++) {
             if (valueCount[i] > 0) {
-                IO.print(values[i] + " - " + valueCount[i]);
+                // IO.print(values[i] + " - " + valueCount[i]);
             }
         }
 
+        return valueCount;
+
+    }
+
+    public static String checkHand(ArrayList<cards> givenDeck) {
+        boolean pair = false;
+        int[] suitsCount = checkSuits(givenDeck);
+        int[] valueCount = checkValue(givenDeck);
+
+        int count = 0;
+
+        boolean flush = false;
+        boolean four = false;
+        boolean three = false;
+        boolean twoPair = false;
+        boolean straight = false;
+        boolean rf = false;
+
+        // Check for flush
+        for (int i = 0; i < suitsCount.length; i++) {
+            if (suitsCount[i] == 5) {
+                flush = true;
+                break;
+            }
+        }
+        for (int i = 0; i < valueCount.length; i++) {
+            if (valueCount[i] == 4) {
+                four = true;
+            } else if (valueCount[i] == 3) {
+
+                three = true;
+            } else if (valueCount[i] == 2) {
+                if (pair == true) {
+                    twoPair = true;
+                }
+                pair = true;
+            }
+            if (valueCount[i] == 1) {
+                count++;
+                if (count == 5) {
+                    straight = true;
+                }
+            } else {
+                count = 0;
+            }
+
+        }
+
+        // high straight
+        if ((valueCount[0] == 1) && (count == 4)) {
+            rf = true;
+        }
+
+        return stringHand(flush, four, three, twoPair, pair, straight, rf);
+    }
+
+    public static String stringHand(boolean flush, boolean four, boolean three, boolean twoPair, boolean pair,
+            boolean straight, boolean rf) {
+        if (rf == true) {
+            return "Royal Flush";
+        } else if (flush && straight) {
+            return "Straight Flush";
+        } else if (four) {
+            return "Four of a Kind";
+        } else if (three && pair) {
+            return "Full House";
+        } else if (flush) {
+            return "Flush";
+        } else if (straight) {
+            return "Straight";
+        } else if (three) {
+            return "Three of a Kind";
+        } else if (twoPair) {
+            return "Two Pair";
+        } else if (pair) {
+            return "One Pair";
+        } else {
+            return "High Card";
+        }
     }
 
 }

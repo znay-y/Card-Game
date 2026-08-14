@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+//Make it so function pick up card is here and changes picked to true automatically
 class cards {
 
     int ID;
