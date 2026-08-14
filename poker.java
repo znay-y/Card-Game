@@ -86,7 +86,7 @@ public class poker {
         boolean end = false;
 
         while (!end) {
-            refreshDisplay(playerCards, dealer,middle);
+            refreshDisplay(playerCards, dealer, middle);
             IO.print("\n1. Fold\n2. Check\n3. Raise");
             int choice = IO.INTput(sc, "Choses one of the options");
 
@@ -113,10 +113,10 @@ public class poker {
                 IO.print("Please pick a valid option");
             }
         }
-        //endGame();
+        // endGame();
     }
 
-    public static void refreshDisplay(ArrayList<cards> playerCards, ArrayList<cards> dealer,ArrayList<cards> middle) {
+    public static void refreshDisplay(ArrayList<cards> playerCards, ArrayList<cards> dealer, ArrayList<cards> middle) {
         IO.clear();
         IO.print("==Poker==");
         IO.print("\nDealer's Cards:");
@@ -132,6 +132,18 @@ public class poker {
         for (int i = 0; i < playerCards.size(); i++) {
             IO.print(playerCards.get(i).getName() + " of " + playerCards.get(i).getSuit());
         }
+
+        checkHand(playerCards);
+    }
+
+    public static void checkHand(ArrayList<cards> playerCards) {
+        /*
+        1. Count numbers
+        2. Count Suits 
+        3. Check requirments for hands
+        */
+
+        
     }
 
     public static void setupPoker(ArrayList<cards> playerCards, ArrayList<cards> dealer, ArrayList<cards> deck,
