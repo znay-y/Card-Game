@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 public class busGame {
@@ -39,8 +38,7 @@ public class busGame {
         IO.print("3. Guess if next cards is inside or outside the range of the previous two");
         IO.print("4. Guess the suit of the last card");
         IO.print("After each round your bet multiplies by two and can be taken out if you quit");
-        IO.print("\nPress enter to continue");
-        sc.nextLine();
+        IO.enterPause(sc);
     }
 
     public static void printOptions() {
@@ -82,7 +80,7 @@ public class busGame {
         int toReturn = 0;
 
         IO.print("Round 1");
-        house.add(pickupCard(deck));
+        house.add(cards.pickupCard(deck));
 
         String colChoice = IO.StringPut(sc, "Red or Black?");
 
@@ -99,8 +97,7 @@ public class busGame {
                 IO.print("\nIncorrect!\n");
                 IO.print("The card picked was " + CardID(current));
                 player.setCurrentBet(-player.getCurrentBet());
-                IO.print("Press enter to continue");
-                sc.nextLine();
+                IO.enterPause(sc);
                 return -1;
             }
         } else if (colChoice.equalsIgnoreCase("Black")) {
@@ -116,8 +113,7 @@ public class busGame {
                 IO.print("\nIncorrect!\n");
                 IO.print("The card picked was " + CardID(current));
                 player.setCurrentBet(-player.getCurrentBet());
-                IO.print("Press enter to continue");
-                sc.nextLine();
+                IO.enterPause(sc);
                 return -1;
             }
         } else {
@@ -142,7 +138,7 @@ public class busGame {
         IO.clear();
 
         IO.print("Round 2");
-        house.add(pickupCard(deck));
+        house.add(cards.pickupCard(deck));
         int toReturn = 0;
 
         IO.print("The last card was: " + CardID(house.get(0)));
@@ -166,8 +162,8 @@ public class busGame {
                 IO.print("\nIncorrect!\n");
                 IO.print(CardID(second) + " was not higher than " + CardID(first));
                 player.setCurrentBet(-player.getCurrentBet());
-                IO.print("Press enter to continue");
-                sc.nextLine();
+                IO.enterPause(sc);
+
                 return -1;
             } else {
                 IO.print("It's a tie");
@@ -185,8 +181,8 @@ public class busGame {
                 IO.print("\nIncorrect!\n");
                 IO.print(CardID(second) + " was not lower than " + CardID(first));
                 player.setCurrentBet(-player.getCurrentBet());
-                IO.print("Press enter to continue");
-                sc.nextLine();
+                IO.enterPause(sc);
+
                 return -1;
             } else {
                 IO.print("It's a tie");
@@ -214,7 +210,7 @@ public class busGame {
         IO.clear();
 
         IO.print("Round 3");
-        house.add(pickupCard(deck));
+        house.add(cards.pickupCard(deck));
 
         cards first = house.get(0);
         cards second = house.get(1);
@@ -257,8 +253,8 @@ public class busGame {
                 IO.print("\nIncorrect!\n");
                 player.setCurrentBet(-player.getCurrentBet() * 3);
                 IO.print("The card was: " + CardID(third));
-                IO.print("Press enter to continue");
-                sc.nextLine();
+                IO.enterPause(sc);
+
                 return -1;
             }
         } else if (inOutChoice.equalsIgnoreCase("outside")) {
@@ -273,8 +269,8 @@ public class busGame {
                 IO.print("\nIncorrect!\n");
                 player.setCurrentBet(-player.getCurrentBet());
                 IO.print("The card was: " + CardID(third));
-                IO.print("Press enter to continue");
-                sc.nextLine();
+                IO.enterPause(sc);
+
                 return -1;
             }
         } else {
@@ -299,7 +295,7 @@ public class busGame {
         IO.clear();
 
         IO.print("Round 4");
-        house.add(pickupCard(deck));
+        house.add(cards.pickupCard(deck));
         cards last = house.get(3);
         String suitGuess = IO.StringPut(sc, "Guess the suit of the final card");
         String currentSuit = last.getSuit();
@@ -313,8 +309,7 @@ public class busGame {
             IO.print("\nIncorrect!\n");
             player.setCurrentBet(-player.getCurrentBet());
             IO.print("The card was: " + CardID(last));
-            IO.print("Press enter to continue");
-            sc.nextLine();
+            IO.enterPause(sc);
             return -1;
         }
 
@@ -348,29 +343,7 @@ public class busGame {
             IO.print(
                     "Something went wrong please try contacting the support helpdesk for an official report on your issue");
         }
-        IO.print("Press enter to continue");
-        sc.nextLine();
-    }
-
-    public static cards pickupCard(ArrayList<cards> deck) {
-        Random cardGen = new Random();
-
-        int val = cardGen.nextInt(51);
-        val += 1;
-        while (deck.get(val).getPicked() == true) {
-            val = cardGen.nextInt(51);
-            val += 1;
-        }
-
-        // Changes for getting cards
-        cards toReturn = deck.get(val);
-        // String fullname = toReturn.name + " of " + toReturn.suit;
-
-        // print("\nYou picked up a: " + fullname + "\n");
-
-        deck.get(val).setPicked(true);
-
-        return toReturn;
+        IO.enterPause(sc);
 
     }
 
