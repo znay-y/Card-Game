@@ -70,8 +70,7 @@ public class LaunchGame {
             player = new User(name, "1000");
         }
 
-        IO.print("Press enter to continue");
-        sc.nextLine();
+        IO.enterPause(sc);
         return player;
 
     }
@@ -87,7 +86,7 @@ public class LaunchGame {
             IO.print("Please pick a valid option");
             saveChoice = IO.INTput(sc, "Chose one of the saves");
         }
-        IO.csvRemover("saves/profiles.csv", saveChoice);
+        IO.lineRemover("saves/profiles.csv", saveChoice);
         return extractedSaves.get(saveChoice - 1);
     }
 
