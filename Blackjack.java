@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 /*
@@ -53,9 +52,7 @@ public class Blackjack {
         IO.print("Keep picking up cards until you hit 21 or less");
         IO.print("IF you end turn when under 21 cpu picks up");
         IO.print("Who ever is the closet wins");
-        IO.print("\nPress Enter to contiune");
-        sc.nextLine();
-        IO.clear();
+        IO.enterPause(sc);
     }
 
     public static void blackjackGame(ArrayList<cards> playerCards, ArrayList<cards> dealer, Scanner sc, User player) {
@@ -76,10 +73,10 @@ public class Blackjack {
             IO.print("\n1.Hit\n2.Double\n3.Stand");
             choice = IO.INTput(sc, "\nChoose one of the options\n");
             if (choice == 1) {
-                playerCards.add(pickupCard(deck));
+                playerCards.add(cards.pickupCard(deck));
                 IO.clear();
             } else if (choice == 2) {
-                playerCards.add(pickupCard(deck));
+                playerCards.add(cards.pickupCard(deck));
                 betAmount *= 2;
                 end = true;
                 IO.clear();
@@ -100,9 +97,7 @@ public class Blackjack {
                 IO.print("You went bust and automatically lose");
                 showYourDeck(playerCards);
                 showHouseDeck(dealer);
-                IO.print("Press enter to continue");
-                sc.nextLine();
-                IO.clear();
+                IO.enterPause(sc);
             }
         }
 
@@ -111,10 +106,10 @@ public class Blackjack {
     }
 
     public static void setupBlackjack(ArrayList<cards> card, ArrayList<cards> dealer, ArrayList<cards> deck) {
-        card.add(pickupCard(deck));
-        card.add(pickupCard(deck));
-        dealer.add(pickupCard(deck));
-        dealer.add(pickupCard(deck));
+        card.add(cards.pickupCard(deck));
+        card.add(cards.pickupCard(deck));
+        dealer.add(cards.pickupCard(deck));
+        dealer.add(cards.pickupCard(deck));
     }
 
     public static void showYourDeck(ArrayList<cards> deck) {
@@ -168,10 +163,8 @@ public class Blackjack {
         }
 
         IO.print("This means that you now have: " + player.getChips() + " chips in your account");
-
-        IO.print("Press enter to move to return to the main menu");
-        sc.nextLine();
-        IO.clear();
+        IO.print("You will now return to the main menu");
+        IO.enterPause(sc);
     }
 
     public static void cpuTurn(ArrayList<cards> dealer, ArrayList<cards> playerCards, ArrayList<cards> deck,
@@ -182,7 +175,7 @@ public class Blackjack {
             IO.print("Press enter to move to the next turn");
             sc.nextLine();
             IO.clear();
-            dealer.add(pickupCard(deck));
+            dealer.add(cards.pickupCard(deck));
             showYourDeck(playerCards);
             showHouseDeck(dealer);
 
@@ -196,11 +189,8 @@ public class Blackjack {
             }
 
         }
-
-        IO.print("Press enter to see the results");
-
-        sc.nextLine();
-        IO.clear();
+        IO.print("See the results here");
+        IO.enterPause(sc);
     }
 
     public static int numbersTotal(ArrayList<cards> nums) {
@@ -227,28 +217,6 @@ public class Blackjack {
             }
         }
         return total;
-    }
-
-    public static cards pickupCard(ArrayList<cards> deck) {
-        Random cardGen = new Random();
-
-        int val = cardGen.nextInt(51);
-        val += 1;
-        while (deck.get(val).getPicked() == true) {
-            val = cardGen.nextInt(51);
-            val += 1;
-        }
-
-        // Changes for getting cards
-        cards toReturn = deck.get(val);
-        // String fullname = toReturn.name + " of " + toReturn.suit;
-
-        // print("\nYou picked up a: " + fullname + "\n");
-
-        deck.get(val).setPicked(true);
-
-        return toReturn;
-
     }
 
 }
