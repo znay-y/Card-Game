@@ -188,3 +188,15 @@ Select a game from the main menu to begin playing.
 - Improved input validation (Different data types)
 - Additional casino games
 
+## Version 1.5
+### Added
+- New Game: Poker
+- Fixed pickupCard method to be static and accessible from all classes
+- Fixed lineRemover not being able to read file
+- New method in IO class to wait for user input before continuing
+- Improved input validation (Different data types)
+- Fixed bug in user class where negative chip values could be shown
+
+### Future Improvements
+- Adding a final game to the program
+- GUI for the program
