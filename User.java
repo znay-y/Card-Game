@@ -39,7 +39,8 @@ class User {
 
     public void setCurrentBet(int currentBet) {
         this.currentBet = currentBet;
-        IO.print("\nThe current bet is " + currentBet+"\n");
+        int betToShow = Math.abs(currentBet);
+        IO.print("\nThe current bet is " + betToShow+"\n");
     }
 
     public void profile(Scanner sc){
@@ -47,10 +48,7 @@ class User {
         IO.print("User Profile");
         IO.print("Name: " + this.getName());
         IO.print("Chips: " + this.getChips());
-        IO.print("Press enter to continue");
-
-        sc.nextLine();
-        IO.clear();
+        IO.enterPause(sc);
     }
 //Differs from setcurrentbet cause it is for initial bets so has validation
     public int setbet(Scanner sc) {
