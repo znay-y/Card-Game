@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 public class poker {
@@ -75,7 +74,7 @@ public class poker {
 
     public static void pokerGame(ArrayList<cards> playerCards, ArrayList<cards> dealer, Scanner sc, User player) {
         IO.clear();
-        int betAmount = player.setbet(sc);
+        player.setbet(sc);
         IO.clear();
         ArrayList<cards> deck = cards.loadDeckCards();
         playerCards.clear();
@@ -87,18 +86,23 @@ public class poker {
         boolean fold = false;
 
         while (!end) {
-            refreshDisplay(playerCards, dealer, middle);
+            if (middle.size() == 5) {
+                end = true;
+                continue;
+            }
+            IO.clear();
+            refreshDisplay(playerCards, dealer, middle, player);
             IO.print("\n1. Fold\n2. Check\n3. Raise");
             int choice = IO.INTput(sc, "Choses one of the options");
 
             if (choice == 1) {
                 IO.print("You folded");
-                fold=true;
+                fold = true;
                 end = true;
                 continue;
             } else if (choice == 2) {
                 IO.print("You checked");
-                middle.add(pickupCard(deck));
+                middle.add(cards.pickupCard(deck));
             } else if (choice == 3) {
                 int raiseAmount = IO.INTput(sc, "How much do you want to raise");
                 while (raiseAmount <= 0 || raiseAmount > player.getChips()) {
@@ -110,29 +114,32 @@ public class poker {
                     raiseAmount = IO.INTput(sc, "How much do you want to raise");
                 }
                 player.setCurrentBet(player.getCurrentBet() + raiseAmount);
+                middle.add(cards.pickupCard(deck));
                 IO.print("You raised by " + raiseAmount + " chips");
             } else {
                 IO.print("Please pick a valid option");
             }
-            if (middle.size() == 5) {
-                end = true;
-            }
+
         }
-        endGame(playerCards, dealer, middle,player,fold);
+        endGame(playerCards, dealer, middle, player, fold, sc);
     }
 
-    public static void endGame(ArrayList<cards> playerCards, ArrayList<cards> dealer, ArrayList<cards> middle, User player,boolean fold) {
+    public static void endGame(ArrayList<cards> playerCards, ArrayList<cards> dealer, ArrayList<cards> middle,
+            User player, boolean fold, Scanner sc) {
         /*
          * ==Things to add ==
          * 1. Changing chips amount
          * 2. Making it so higher hadns wins
          */
-                    refreshDisplay(playerCards, dealer, middle);
-
-        if(fold){
-            IO.print("You folded and lost "+player.getCurrentBet()+" chips");
-        }
-        else{
+        IO.clear();
+        IO.print("\nA final look at the cards before deciding the winner\n");
+        refreshDisplay(playerCards, dealer, middle, player);
+        IO.enterPause(sc);
+        if (fold == true) {
+            IO.print("You folded and lost " + player.getCurrentBet() + " chips");
+            IO.enterPause(sc);
+            player.setChips(player.getChips() - player.getCurrentBet());
+        } else {
 
             ArrayList<cards> houseToCheck = joinDeck(dealer, middle);
             ArrayList<cards> userToCheck = joinDeck(playerCards, middle);
@@ -149,24 +156,19 @@ public class poker {
 
             if (userRank > houseRank) {
                 IO.print("You won " + player.getCurrentBet() * 2 + " chips");
-                player.setChips(player.getChips() + player.getCurrentBet());
+                player.setChips(player.getChips() + (player.getCurrentBet() * 2));
             } else if (userRank < houseRank) {
                 IO.print("You lost " + player.getCurrentBet() + " chips");
                 player.setChips(player.getChips() - player.getCurrentBet());
             } else {
-                IO.print("It's a tie! You get your bet back");
+                IO.print("You have tied meaning you get your " + player.getCurrentBet() + " chips back");
             }
-            
+            IO.enterPause(sc);
         }
-
-
-
-
-
     }
 
-    public static void refreshDisplay(ArrayList<cards> playerCards, ArrayList<cards> dealer, ArrayList<cards> middle) {
-        IO.clear();
+    public static void refreshDisplay(ArrayList<cards> playerCards, ArrayList<cards> dealer, ArrayList<cards> middle,
+            User player) {
         IO.print("==Poker==");
         IO.print("\nDealer's Cards:");
         for (int i = 0; i < dealer.size(); i++) {
@@ -186,6 +188,7 @@ public class poker {
         }
         ArrayList<cards> userToCheck = joinDeck(playerCards, middle);
         IO.print("Current best hand: " + checkHand(userToCheck));
+        IO.print("Current bet: " + player.getCurrentBet());
     }
 
     public static ArrayList<cards> joinDeck(ArrayList<cards> playerCards, ArrayList<cards> middle) {
@@ -204,35 +207,13 @@ public class poker {
 
     public static void setupPoker(ArrayList<cards> playerCards, ArrayList<cards> dealer, ArrayList<cards> deck,
             ArrayList<cards> middle) {
-        playerCards.add(pickupCard(deck));
-        playerCards.add(pickupCard(deck));
-        middle.add(pickupCard(deck));
-        middle.add(pickupCard(deck));
-        middle.add(pickupCard(deck));
-        dealer.add(pickupCard(deck));
-        dealer.add(pickupCard(deck));
-    }
-
-    public static cards pickupCard(ArrayList<cards> deck) {
-        Random cardGen = new Random();
-
-        int val = cardGen.nextInt(51);
-        val += 1;
-        while (deck.get(val).getPicked() == true) {
-            val = cardGen.nextInt(51);
-            val += 1;
-        }
-
-        // Changes for getting cards
-        cards toReturn = deck.get(val);
-        // String fullname = toReturn.name + " of " + toReturn.suit;
-
-        // print("\nYou picked up a: " + fullname + "\n");
-
-        deck.get(val).setPicked(true);
-
-        return toReturn;
-
+        playerCards.add(cards.pickupCard(deck));
+        playerCards.add(cards.pickupCard(deck));
+        middle.add(cards.pickupCard(deck));
+        middle.add(cards.pickupCard(deck));
+        middle.add(cards.pickupCard(deck));
+        dealer.add(cards.pickupCard(deck));
+        dealer.add(cards.pickupCard(deck));
     }
 
     public static int[] checkSuits(ArrayList<cards> originalDeck) {
