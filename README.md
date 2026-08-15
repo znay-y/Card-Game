@@ -28,6 +28,15 @@ Play a simplified version of Ride the Bus by predicting whether the next card wi
 
 ---
 
+### Poker
+Play a simplified version of Poker by forming the best possible hand with the available cards.
+
+**Features**
+- Player vs House gameplay
+- Fold, Check, and Raise options
+
+---
+
 ## Program Features
 
 - Main menu for selecting games
@@ -43,11 +52,14 @@ Play a simplified version of Ride the Bus by predicting whether the next card wi
 
 ```
 Casino/
-│── Main.java          # Main menu and program entry point
+│── LaunchGame.java          # Main menu and program entry point
 │── Blackjack.java     # Blackjack game logic
-│── RideTheBus.java    # Ride the Bus game logic
-│── Card.java          # Card class
+│── busGame.java    # Ride the Bus game logic
+│── cards.java          # Card class
 │── Player.java        # Player profile and chip management
+│── Poker.java         # Poker game logic
+│── IO.java             # Input/Output utility class
+│── theCardGame.java   # Upcoming card game in V1.6
 ```
 
 ---
@@ -75,6 +87,17 @@ Casino/
 4. Continue guessing correctly to progress.
 5. An incorrect guess costs chips.
 
+### Poker
+
+1. Select **Poker** from the main menu.
+2. 2 cards are dealt to the player and house with 3 cards are dealt to the table.
+3. The player can choose to do the following:
+   - Fold
+   - Check
+   - Raise
+4. The game continues until the player folds or the table is complete with 5 cards.
+5. Whoever has the best hand wins the game.
+
 ---
 
 ## How to Run
@@ -88,7 +111,7 @@ javac *.java
 Run the program:
 
 ```bash
-java Main
+java LaunchGame
 ```
 
 Select a game from the main menu to begin playing.
