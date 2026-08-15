@@ -84,6 +84,7 @@ public class poker {
         setupPoker(playerCards, dealer, deck, middle);
 
         boolean end = false;
+        boolean fold = false;
 
         while (!end) {
             refreshDisplay(playerCards, dealer, middle);
@@ -92,6 +93,7 @@ public class poker {
 
             if (choice == 1) {
                 IO.print("You folded");
+                fold=true;
                 end = true;
                 continue;
             } else if (choice == 2) {
@@ -112,15 +114,55 @@ public class poker {
             } else {
                 IO.print("Please pick a valid option");
             }
-            if(middle.size()==5){
-                end=true;
+            if (middle.size() == 5) {
+                end = true;
             }
         }
-        endGame();
+        endGame(playerCards, dealer, middle,player,fold);
     }
 
-    public static void endGame(){
-        
+    public static void endGame(ArrayList<cards> playerCards, ArrayList<cards> dealer, ArrayList<cards> middle, User player,boolean fold) {
+        /*
+         * ==Things to add ==
+         * 1. Changing chips amount
+         * 2. Making it so higher hadns wins
+         */
+                    refreshDisplay(playerCards, dealer, middle);
+
+        if(fold){
+            IO.print("You folded and lost "+player.getCurrentBet()+" chips");
+        }
+        else{
+
+            ArrayList<cards> houseToCheck = joinDeck(dealer, middle);
+            ArrayList<cards> userToCheck = joinDeck(playerCards, middle);
+
+            String houseHand = checkHand(houseToCheck);
+            String userHand = checkHand(userToCheck);
+
+            int houseRank = handRanking(houseHand);
+            int userRank = handRanking(userHand);
+
+            IO.print("\n==End of Game==");
+            IO.print("Your hand: " + userHand);
+            IO.print("House hand: " + houseHand);
+
+            if (userRank > houseRank) {
+                IO.print("You won " + player.getCurrentBet() * 2 + " chips");
+                player.setChips(player.getChips() + player.getCurrentBet());
+            } else if (userRank < houseRank) {
+                IO.print("You lost " + player.getCurrentBet() + " chips");
+                player.setChips(player.getChips() - player.getCurrentBet());
+            } else {
+                IO.print("It's a tie! You get your bet back");
+            }
+            
+        }
+
+
+
+
+
     }
 
     public static void refreshDisplay(ArrayList<cards> playerCards, ArrayList<cards> dealer, ArrayList<cards> middle) {
@@ -130,28 +172,30 @@ public class poker {
         for (int i = 0; i < dealer.size(); i++) {
             IO.print(dealer.get(i).getName() + " of " + dealer.get(i).getSuit());
         }
+        ArrayList<cards> houseToCheck = joinDeck(dealer, middle);
+        IO.print("Current best hand: " + checkHand(houseToCheck));
         IO.print("\nMiddle Cards:");
         for (int i = 0; i < middle.size(); i++) {
             IO.print(middle.get(i).getName() + " of " + middle.get(i).getSuit());
-           
+
         }
 
         IO.print("\nYour Cards:");
         for (int i = 0; i < playerCards.size(); i++) {
             IO.print(playerCards.get(i).getName() + " of " + playerCards.get(i).getSuit());
         }
-        ArrayList<cards> toCheck = joinDeck(playerCards, middle);
-        IO.print("Current best hand: "+checkHand(toCheck));
+        ArrayList<cards> userToCheck = joinDeck(playerCards, middle);
+        IO.print("Current best hand: " + checkHand(userToCheck));
     }
 
-    public static ArrayList<cards> joinDeck(ArrayList<cards> playerCards, ArrayList<cards> middle){
+    public static ArrayList<cards> joinDeck(ArrayList<cards> playerCards, ArrayList<cards> middle) {
         ArrayList<cards> newlist = new ArrayList<cards>();
 
-        for(int i=0;i<playerCards.size();i++){
+        for (int i = 0; i < playerCards.size(); i++) {
             newlist.add(playerCards.get(i));
         }
 
-        for(int j=0;j<middle.size();j++){
+        for (int j = 0; j < middle.size(); j++) {
             newlist.add(middle.get(j));
         }
 
@@ -191,7 +235,7 @@ public class poker {
 
     }
 
-     public static int[] checkSuits(ArrayList<cards> originalDeck) {
+    public static int[] checkSuits(ArrayList<cards> originalDeck) {
         // IO.print("\n== New Deck Suits ==\n");
         String[] suits = { "Spades", "Hearts", "Diamonds", "Clubs" };
         int[] suitsCount = { 0, 0, 0, 0 };
@@ -284,9 +328,7 @@ public class poker {
             } else {
                 count = 0;
             }
-
         }
-
         // high straight
         if ((valueCount[0] == 1) && (count == 4)) {
             rf = true;
@@ -320,4 +362,29 @@ public class poker {
         }
     }
 
+    public static int handRanking(String hand) {
+        if (hand.equals("Royal Flush")) {
+            return 10;
+        } else if (hand.equals("Straight Flush")) {
+            return 9;
+        } else if (hand.equals("Four of a Kind")) {
+            return 8;
+        } else if (hand.equals("Full House")) {
+            return 7;
+        } else if (hand.equals("Flush")) {
+            return 6;
+        } else if (hand.equals("Straight")) {
+            return 5;
+        } else if (hand.equals("Three of a Kind")) {
+            return 4;
+        } else if (hand.equals("Two Pair")) {
+            return 3;
+        } else if (hand.equals("One Pair")) {
+            return 2;
+        } else if (hand.equals("High Card")) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }
