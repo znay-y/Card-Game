@@ -1,9 +1,8 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class IO {
@@ -34,42 +33,42 @@ public class IO {
         return input;
     }
 
+    public static void enterPause(Scanner sc) {
+        print("\nPress Enter to continue");
+        sc.nextLine();
+        clear();
+    }
+
     public static void clear() {
         print("\033[H\033[2J\033[3J");
         System.out.flush();
     }
 
-     public static void csvRemover(String filePath, int lineNumber) {
-
-        Path csvPath = Paths.get(filePath);
-
-        try {
-
-            List<String> lines = new ArrayList<>(Files.readAllLines(csvPath));
-
-            if (lines.isEmpty()) {
-                System.out.println("The CSV file is empty.");
-                return;
+    public static void lineRemover(String filePath, int lineNumber) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try (Scanner reader = new Scanner(new File(filePath))) {
+            while (reader.hasNextLine()) {
+                String data = reader.nextLine();
+                lines.add(data);
             }
 
-            int choice = lineNumber;
-
-
-            if (choice < 1 || choice > lines.size()) {
-                System.out.println("Error: Line number out of range.");
-                return;
-            }
-
-
-            String removedLine = lines.remove(choice - 1);
-            //System.out.println("Successfully removed line: " + removedLine);
-
-
-            Files.write(csvPath, lines);
-            //System.out.println("CSV file updated successfully.");
-        } catch (IOException e) {
-            System.out.println("An I/O error occurred: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            print("File not found");
+            return;
         }
+
+        lines.remove(lineNumber - 1);
+
+        try (FileWriter writer = new FileWriter(filePath, false)) {
+            for (int i = 0; i < lines.size(); i++) {
+                writer.write(lines.get(i)+"\n");
+            }
+        } catch (IOException e) {
+            print("There was an error accessing the file");
+        }
+
+        return;
+
     }
 
 }
