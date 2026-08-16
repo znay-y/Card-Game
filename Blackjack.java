@@ -1,12 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/*
 
-Fixes or later: 
-- Make it so aces can be 1 or 11
-
-*/
 public class Blackjack {
 
     public static void main(String[] args, User player) {

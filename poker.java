@@ -170,18 +170,6 @@ public class poker {
     public static void refreshDisplay(ArrayList<cards> playerCards, ArrayList<cards> dealer, ArrayList<cards> middle,
             User player) {
         IO.print("==Poker==");
-        IO.print("\nDealer's Cards:");
-        for (int i = 0; i < dealer.size(); i++) {
-            IO.print(dealer.get(i).getName() + " of " + dealer.get(i).getSuit());
-        }
-        ArrayList<cards> houseToCheck = joinDeck(dealer, middle);
-        IO.print("Current best hand: " + checkHand(houseToCheck));
-        IO.print("\nMiddle Cards:");
-        for (int i = 0; i < middle.size(); i++) {
-            IO.print(middle.get(i).getName() + " of " + middle.get(i).getSuit());
-
-        }
-
         IO.print("\nYour Cards:");
         for (int i = 0; i < playerCards.size(); i++) {
             IO.print(playerCards.get(i).getName() + " of " + playerCards.get(i).getSuit());
@@ -189,19 +177,28 @@ public class poker {
         ArrayList<cards> userToCheck = joinDeck(playerCards, middle);
         IO.print("Current best hand: " + checkHand(userToCheck));
         IO.print("Current bet: " + player.getCurrentBet());
+        IO.print("\nMiddle Cards:");
+        for (int i = 0; i < middle.size(); i++) {
+            IO.print(middle.get(i).getName() + " of " + middle.get(i).getSuit());
+
+        }
+        IO.print("\nDealer's Cards:");
+        for (int i = 0; i < dealer.size(); i++) {
+            IO.print(dealer.get(i).getName() + " of " + dealer.get(i).getSuit());
+        }
+        ArrayList<cards> houseToCheck = joinDeck(dealer, middle);
+        IO.print("Current best hand: " + checkHand(houseToCheck));
+
     }
 
     public static ArrayList<cards> joinDeck(ArrayList<cards> playerCards, ArrayList<cards> middle) {
         ArrayList<cards> newlist = new ArrayList<cards>();
-
         for (int i = 0; i < playerCards.size(); i++) {
             newlist.add(playerCards.get(i));
         }
-
         for (int j = 0; j < middle.size(); j++) {
             newlist.add(middle.get(j));
         }
-
         return newlist;
     }
 
@@ -237,7 +234,6 @@ public class poker {
                 // IO.print(suits[i] + " - " + suitsCount[i]);
             }
         }
-
         return suitsCount;
     }
 
@@ -256,16 +252,13 @@ public class poker {
                     }
                 }
             }
-
         }
         for (int i = 0; i < values.length; i++) {
             if (valueCount[i] > 0) {
                 // IO.print(values[i] + " - " + valueCount[i]);
             }
         }
-
         return valueCount;
-
     }
 
     public static String checkHand(ArrayList<cards> givenDeck) {
