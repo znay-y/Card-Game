@@ -39,7 +39,7 @@ public class theCardGame {
     }
 
     public static void printRules(Scanner sc) {
-        IO.clear();
+        // IO.clear();
         IO.print("==The Card Game==");
         IO.print("Both the player and the cpu will start with 5 cards");
         IO.print("There will be a starting cards in the middle");
@@ -55,7 +55,7 @@ public class theCardGame {
     }
 
     public static void theGame(ArrayList<cards> playerCards, ArrayList<cards> compCards, Scanner sc) {
-        IO.clear();
+        ////IO.clear();
         // int betAmount = player.setbet(sc);
         IO.clear();
         ArrayList<cards> deck = cards.loadDeckCards();
@@ -76,6 +76,7 @@ public class theCardGame {
                 playCard(playerCards, compCards, topCard, deck, sc);
             } else if (choice == 2) {
                 playerCards.add(cards.pickupCard(deck));
+                CPUturn(playerCards, compCards, topCard, deck, sc);
             } else if (choice == 3) {
                 end = true;
             } else {
@@ -97,23 +98,96 @@ public class theCardGame {
         boolean playable = checkPlayable(playerCards, middleCards.get(middleCards.size() - 1));
 
         if (playable) {
+            cards currentMiddle = middleCards.get(middleCards.size() - 1);
+            IO.print("The top card is: " + currentMiddle.name + " of " + currentMiddle.suit);
             IO.print("\nYour cards: ");
             for (int i = 0; i < playerCards.size(); i++) {
                 IO.print((i + 1) + ". " + playerCards.get(i).getName() + " of " + playerCards.get(i).getSuit());
             }
-            IO.print("Which card would you like to play?");
             int cardPlace = IO.INTput(sc, "Enter the number of the card you want to play") - 1;
-            while (cardPlace >= playerCards.size()) {
-                IO.print("Please pick a valid card");
+            boolean validInput = checkValid(playerCards, currentMiddle, cardPlace, sc);
+            while (!validInput) {
                 cardPlace = IO.INTput(sc, "Enter the number of the card you want to play") - 1;
+                validInput = checkValid(playerCards, currentMiddle, cardPlace, sc);
             }
-            middleCards.add(playerCards.get(cardPlace));
-            playerCards.remove(cardPlace);
-            CPUturn(compCards, middleCards, deck, sc);
+
+            // Add letting user chain here
+            placeCard(playerCards, compCards, middleCards, deck, cardPlace, sc, 1);
+            CPUturn(playerCards, compCards, middleCards, deck, sc);
         } else {
             IO.print("You cannot play any cards, you must pick up a card");
+            IO.enterPause(sc);
             return;
         }
+    }
+
+    public static boolean checkValid(ArrayList<cards> playerCards, cards currentMiddle, int cardPlace, Scanner sc) {
+        if (cardPlace < 0) {
+            IO.print("Not a Negative");
+            return false;
+        } else if (cardPlace >= playerCards.size()) {
+            IO.print("Stay in range");
+            return false;
+        } else if (!checkPlayable(playerCards.get(cardPlace), currentMiddle)) {
+            IO.print("NO THERE'S ANOTHER CARD WHAT IS WRONG WITH YOU MY GOSH YOU ARE STUPID HUH YOU LITTLE DUMMY");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    // Takes card from 'from' and checks it for any kinda special stuff like aces or
+    // smth
+    public static void placeCard(ArrayList<cards> from, ArrayList<cards> to, ArrayList<cards> middleCards,
+            ArrayList<cards> deck, int index, Scanner sc, int who) {
+
+        cards moved = from.get(index);
+        // 0 is cpu 1 is user
+        if (moved.name.equals("Ace")) {
+            if (who == 1) {
+                String newSuit = IO.StringPut(sc, "Which suit do you want to change it to?");
+                while (!newSuit.equals("Diamonds") && !newSuit.equals("Hearts") && !newSuit.equals("Clubs")
+                        && !newSuit.equals("Spades")) {
+                    IO.print("Please pick a valid suit");
+                    newSuit = IO.StringPut(sc, "Which suit do you want to change it to?");
+                }
+                cards SuitChange = new cards(newSuit, -1);
+                cardSwap(SuitChange, middleCards);
+
+            } else if (who == 0) {
+                String[] suits = { "Spades", "Hearts", "Diamonds", "Clubs" };
+                int[] suitsCount = { 0, 0, 0, 0 };
+                for (int j = 0; j < from.size(); j++) {
+                    for (int k = 0; k < suits.length; k++) {
+                        if (from.get(j).suit.equals(suits[k])) {
+                            suitsCount[k]++;
+                        }
+                    }
+                }
+                int highest = 0;
+                int ind = 0;
+                for (int k = 0; k < suits.length; k++) {
+                    if (highest < suitsCount[k]) {
+                        highest = suitsCount[k];
+                        ind = k;
+                    }
+                }
+                cards SuitChange = new cards(suits[ind], -1);
+                cardSwap(SuitChange, middleCards);
+
+            }
+        } else if (moved.name.equals("Jack")) {
+            for (int i = 0; i < 5; i++) {
+                to.add(cards.pickupCard(deck));
+            }
+        } else if (moved.name.equals("Two")) {
+            for (int i = 0; i < 2; i++) {
+                to.add(cards.pickupCard(deck));
+            }
+        } else {
+            cardSwap(from, middleCards, index);
+        }
+
     }
 
     public static void cardSwap(ArrayList<cards> from, ArrayList<cards> to, int index) {
@@ -122,28 +196,54 @@ public class theCardGame {
         return;
     }
 
-    public static void CPUturn(ArrayList<cards> compCards, ArrayList<cards> middleCards, ArrayList<cards> deck,
-            Scanner sc) {
+    public static void cardSwap(cards from, ArrayList<cards> to) {
+        to.add(from);
+        return;
+    }
+
+    public static void CPUturn(ArrayList<cards> playerCards, ArrayList<cards> compCards, ArrayList<cards> middleCards,
+            ArrayList<cards> deck, Scanner sc) {
         /*
          * 1. Play a card.
          * a. Use chackplayable.
          * 2. Chose a suit when ace.
          * a. Count each suit, most gets picked.
-         * 3. Prioritise pickup cards like 2s and Jacks.
-         * a. Search for those first.
          */
         // Searching for pickups
-        for (int i = 0; i < compCards.size(); i++) {
-            if (compCards.get(i).name.equals("Jack") || compCards.get(i).name.equals("Two")) {
-                cards cardToPlay = compCards.get(i);
-                cardSwap(compCards, middleCards, i);
-            } else if (checkPlayable(compCards, middleCards.get(middleCards.size() - 1))) {
-                cards cardToPlay = compCards.get(i);
-                cardSwap(compCards, middleCards, i);
-            }
-            else{
+        boolean played = false;
+        cards currentMiddle = middleCards.get(middleCards.size() - 1);
+        boolean playable = checkPlayable(compCards, currentMiddle);
 
+        if (playable) {
+
+            for (int i = 0; i < compCards.size(); i++) {
+                if (compCards.get(i).name.equals("Jack") && checkPlayable(compCards.get(i), currentMiddle)) {
+                    placeCard(compCards, compCards, middleCards, deck, i, sc, 0);
+                    played = true;
+                    break;
+                } else if (compCards.get(i).name.equals("Two") && checkPlayable(compCards.get(i), currentMiddle)) {
+                    placeCard(compCards, compCards, middleCards, deck, i, sc, 0);
+                    played = true;
+                    break;
+                } else if (compCards.get(i).name.equals("Ace") && checkPlayable(compCards.get(i), currentMiddle)) {
+                    placeCard(compCards, compCards, middleCards, deck, i, sc, 0);
+                    played = true;
+                    break;
+                }
             }
+            // Checks for next playable card if none of above is found
+            if (!played) {
+                for (int i = 0; i < compCards.size(); i++) {
+                    if (checkPlayable(compCards.get(i), currentMiddle)) {
+                        placeCard(compCards, compCards, middleCards, deck, i, sc, 0);
+                        played = true;
+                        break;
+                    }
+                }
+            }
+        } else {
+            // pickup card if no playable cards
+            compCards.add(cards.pickupCard(deck));
         }
     }
 
@@ -177,8 +277,19 @@ public class theCardGame {
             IO.print(playerCards.get(i).getName() + " of " + playerCards.get(i).getSuit());
         }
         IO.print("\nCPU remaining cards: " + compCards.size());
-        IO.print("\nTop card: " + topCard.get(topCard.size() - 1).getName() + " of "
-                + topCard.get(topCard.size() - 1).getSuit());
+        IO.print("==FOR TESTING ONLY==");
+        for (int i = 0; i < compCards.size(); i++) {
+            IO.print(compCards.get(i).getName() + " of " + compCards.get(i).getSuit());
+        }
+        cards currentMiddle = topCard.get(topCard.size() - 1);
+        // Ace changed suit
+        if (currentMiddle.getID() == -1) {
+            IO.print("The next card played must be a: " + currentMiddle.suit);
+        } else {
+            IO.print("\nTop card: " + currentMiddle.getName() + " of "
+                    + currentMiddle.getSuit());
+        }
+
     }
 
     public static void theGameSteup(ArrayList<cards> playerCards, ArrayList<cards> compCards, ArrayList<cards> topCard,

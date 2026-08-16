@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
-//Make it so function pick up card is here and changes picked to true automatically
+
 class cards {
 
     int ID;
@@ -8,6 +8,20 @@ class cards {
     String suit;
     String name;
     boolean picked;
+
+    public cards(String newSuit, int id) {
+        this.suit = newSuit;
+        this.name = "Suit Changer";
+        this.ID = id;
+    }
+
+    public cards(int id, int value, String suit, String name, boolean picked) {
+        this.ID = id;
+        this.value = value;
+        this.suit = suit;
+        this.name = name;
+        this.picked = picked;
+    }
 
     public int getID() {
         return ID;
@@ -59,12 +73,7 @@ class cards {
 
         for (int i = 0; i <= 3; i++) {
             for (int j = 0; j < 13; j++) {
-                cards toMake = new cards();
-                toMake.setSuit(suits[i]);
-                toMake.setName(names[j]);
-                toMake.setPicked(false);
-                toMake.setValue(j + 1);
-                toMake.setID(idcount);
+                cards toMake = new cards(idcount, j + 1, suits[i], names[j], false);
                 idcount++;
                 deck.add(toMake);
             }
@@ -72,7 +81,7 @@ class cards {
         return deck;
     }
 
-     public static cards pickupCard(ArrayList<cards> deck) {
+    public static cards pickupCard(ArrayList<cards> deck) {
         Random cardGen = new Random();
 
         int val = cardGen.nextInt(deck.size());
