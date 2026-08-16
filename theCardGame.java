@@ -1,6 +1,13 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/*
+When you pick up let them play 
+Show what the cpu played then enter to continue
+make it so it shows a winner
+rework ai to clear all card form one suit then use ace
+make it so pickup ones and it still ur turn but only for one round 
+cards that are already played become the original deck */
 public class theCardGame {
     public static void main(String[] args) {
         ArrayList<cards> playerCards = new ArrayList<cards>();
@@ -76,13 +83,19 @@ public class theCardGame {
                 playCard(playerCards, compCards, topCard, deck, sc);
             } else if (choice == 2) {
                 playerCards.add(cards.pickupCard(deck));
-                CPUturn(playerCards, compCards, topCard, deck, sc);
             } else if (choice == 3) {
                 end = true;
             } else {
                 IO.print("Please pick a valid option");
             }
+
+            if(playerCards.size()==0||compCards.size()==0){
+                end=true;
+            }
         }
+        IO.clear();
+        IO.print("Did you win...");
+        IO.print("I hope so :)");
     }
 
     public static void playCard(ArrayList<cards> playerCards, ArrayList<cards> compCards, ArrayList<cards> middleCards,
@@ -144,6 +157,8 @@ public class theCardGame {
         cards moved = from.get(index);
         // 0 is cpu 1 is user
         if (moved.name.equals("Ace")) {
+            cardSwap(from, middleCards, index);
+
             if (who == 1) {
                 String newSuit = IO.StringPut(sc, "Which suit do you want to change it to?");
                 while (!newSuit.equals("Diamonds") && !newSuit.equals("Hearts") && !newSuit.equals("Clubs")
@@ -155,6 +170,9 @@ public class theCardGame {
                 cardSwap(SuitChange, middleCards);
 
             } else if (who == 0) {
+                
+                cardSwap(from, middleCards, index);
+
                 String[] suits = { "Spades", "Hearts", "Diamonds", "Clubs" };
                 int[] suitsCount = { 0, 0, 0, 0 };
                 for (int j = 0; j < from.size(); j++) {
@@ -174,20 +192,20 @@ public class theCardGame {
                 }
                 cards SuitChange = new cards(suits[ind], -1);
                 cardSwap(SuitChange, middleCards);
-
             }
-        } else if (moved.name.equals("Jack")) {
+        } else if ((moved.name.equals("Jack")) && ((moved.suit.equals("Spades")) || (moved.suit.equals("Clubs")))) {
             for (int i = 0; i < 5; i++) {
                 to.add(cards.pickupCard(deck));
             }
+            cardSwap(from, middleCards, index);
         } else if (moved.name.equals("Two")) {
             for (int i = 0; i < 2; i++) {
                 to.add(cards.pickupCard(deck));
             }
+            cardSwap(from, middleCards, index);
         } else {
             cardSwap(from, middleCards, index);
         }
-
     }
 
     public static void cardSwap(ArrayList<cards> from, ArrayList<cards> to, int index) {
@@ -217,16 +235,19 @@ public class theCardGame {
         if (playable) {
 
             for (int i = 0; i < compCards.size(); i++) {
-                if (compCards.get(i).name.equals("Jack") && checkPlayable(compCards.get(i), currentMiddle)) {
-                    placeCard(compCards, compCards, middleCards, deck, i, sc, 0);
+                String currentName = compCards.get(i).name;
+                String currentSuit = compCards.get(i).suit;
+                if (currentName.equals("Jack") && checkPlayable(compCards.get(i), currentMiddle)
+                        && (currentSuit.equals("Spades")) || (currentSuit.equals("Clubs"))) {
+                    placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
                     played = true;
                     break;
-                } else if (compCards.get(i).name.equals("Two") && checkPlayable(compCards.get(i), currentMiddle)) {
-                    placeCard(compCards, compCards, middleCards, deck, i, sc, 0);
+                } else if (currentName.equals("Two") && checkPlayable(compCards.get(i), currentMiddle)) {
+                    placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
                     played = true;
                     break;
-                } else if (compCards.get(i).name.equals("Ace") && checkPlayable(compCards.get(i), currentMiddle)) {
-                    placeCard(compCards, compCards, middleCards, deck, i, sc, 0);
+                } else if (currentName.equals("Ace") && checkPlayable(compCards.get(i), currentMiddle)) {
+                    placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
                     played = true;
                     break;
                 }
@@ -235,7 +256,7 @@ public class theCardGame {
             if (!played) {
                 for (int i = 0; i < compCards.size(); i++) {
                     if (checkPlayable(compCards.get(i), currentMiddle)) {
-                        placeCard(compCards, compCards, middleCards, deck, i, sc, 0);
+                        placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
                         played = true;
                         break;
                     }
