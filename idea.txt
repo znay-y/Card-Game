@@ -1,0 +1,6 @@
+When you pick up let them play ✅
+Show what the cpu played then enter to continue
+make it so it shows a winner
+rework ai to clear all card form one suit then use ace
+make it so pickup ones and it still ur turn but only for one round ✅
+cards that are already played become the original deck 

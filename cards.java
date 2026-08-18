@@ -83,18 +83,12 @@ class cards {
 
     public static cards pickupCard(ArrayList<cards> deck) {
         Random cardGen = new Random();
-
         int val = cardGen.nextInt(deck.size());
-
         while (deck.get(val).getPicked() == true) {
             val = cardGen.nextInt(deck.size());
         }
-
         cards toReturn = deck.get(val);
-
         deck.get(val).setPicked(true);
-
         return toReturn;
-
     }
 }

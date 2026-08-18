@@ -1,13 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-/*
-When you pick up let them play 
-Show what the cpu played then enter to continue
-make it so it shows a winner
-rework ai to clear all card form one suit then use ace
-make it so pickup ones and it still ur turn but only for one round 
-cards that are already played become the original deck */
 public class theCardGame {
     public static void main(String[] args) {
         ArrayList<cards> playerCards = new ArrayList<cards>();
@@ -72,6 +65,7 @@ public class theCardGame {
         theGameSteup(playerCards, compCards, topCard, deck);
 
         boolean end = false;
+        boolean pickedUp = false;
         while (!end) {
             refreshDisplay(playerCards, compCards, topCard);
             int choice = 0;
@@ -82,15 +76,22 @@ public class theCardGame {
             if (choice == 1) {
                 playCard(playerCards, compCards, topCard, deck, sc);
             } else if (choice == 2) {
-                playerCards.add(cards.pickupCard(deck));
+                if (pickedUp == false) {
+                    playerCards.add(cards.pickupCard(deck));
+                    pickedUp = true;
+                } else if (pickedUp == true) {
+                    IO.enterPause(sc);
+                    CPUturn(playerCards, compCards, topCard, deck, sc);
+                    pickedUp = false;
+                }
             } else if (choice == 3) {
                 end = true;
             } else {
                 IO.print("Please pick a valid option");
             }
 
-            if(playerCards.size()==0||compCards.size()==0){
-                end=true;
+            if (playerCards.size() == 0 || compCards.size() == 0) {
+                end = true;
             }
         }
         IO.clear();
@@ -170,7 +171,7 @@ public class theCardGame {
                 cardSwap(SuitChange, middleCards);
 
             } else if (who == 0) {
-                
+
                 cardSwap(from, middleCards, index);
 
                 String[] suits = { "Spades", "Hearts", "Diamonds", "Clubs" };
@@ -237,8 +238,8 @@ public class theCardGame {
             for (int i = 0; i < compCards.size(); i++) {
                 String currentName = compCards.get(i).name;
                 String currentSuit = compCards.get(i).suit;
-                if (currentName.equals("Jack") && checkPlayable(compCards.get(i), currentMiddle)
-                        && (currentSuit.equals("Spades")) || (currentSuit.equals("Clubs"))) {
+                if (currentName.equals("Jack") && checkPlayable(compCards.get(i), currentMiddle)  && ((currentSuit.equals("Spades")) || (currentSuit.equals("Clubs")))) {
+                    IO.print(i);
                     placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
                     played = true;
                     break;
@@ -293,14 +294,14 @@ public class theCardGame {
             ArrayList<cards> topCard) {
         IO.clear();
         IO.print("==The Card Game==");
-        IO.print("\nYour cards: ");
+        IO.print("\nYour cards(Remaining-"+playerCards.size()+"): ");
         for (int i = 0; i < playerCards.size(); i++) {
             IO.print(playerCards.get(i).getName() + " of " + playerCards.get(i).getSuit());
         }
         IO.print("\nCPU remaining cards: " + compCards.size());
-        IO.print("==FOR TESTING ONLY==");
+        //IO.print("==FOR TESTING ONLY==");
         for (int i = 0; i < compCards.size(); i++) {
-            IO.print(compCards.get(i).getName() + " of " + compCards.get(i).getSuit());
+            //IO.print(compCards.get(i).getName() + " of " + compCards.get(i).getSuit());
         }
         cards currentMiddle = topCard.get(topCard.size() - 1);
         // Ace changed suit
