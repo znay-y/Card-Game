@@ -27,9 +27,13 @@ public class chaining {
         for (int i = 0; i < 20; i++) {
             playerCards.add(cards.pickupCard(entireDeck));
         }
-        //System.out.println(chainAvailable(playerCards));
+        // System.out.println(chainAvailable(playerCards));
         // checkForChains(playerCards, chained, sc);
-        sortDeck(playerCards);
+        playerCards = sortDeck(playerCards);
+        if (chainAvailable(playerCards)) {
+            checkForChains(playerCards, chained, sc);
+        }
+
     }
 
     public static void refresh(ArrayList<cards> deck, ArrayList<cards> chained) {
@@ -69,7 +73,7 @@ public class chaining {
 
     }
 
-    public static void sortDeck(ArrayList<cards> deck) {
+    public static ArrayList<cards> sortDeck(ArrayList<cards> deck) {
         String[] suits = { "Clubs", "Diamonds", "Hearts", "Spades" };
         String[] names = { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack",
                 "Queen", "King" };
@@ -80,18 +84,18 @@ public class chaining {
             for (int k = 0; k < names.length; k++) {
                 for (int i = 0; i < deck.size(); i++) {
                     cards current = deck.get(i);
-
-                    if(current.name.equals(names[k])&&current.suit.equals(suits[j])){
+                    if (current.name.equals(names[k]) && current.suit.equals(suits[j])) {
                         sorted.add(current);
                     }
-
                 }
             }
         }
 
-        for(cards c:sorted){
+        for (cards c : sorted) {
             IO.print(nameFor(c));
         }
+
+        return sorted;
     }
 
     public static void checkForChains(ArrayList<cards> deck, ArrayList<cards> chainedCards, Scanner sc) {
@@ -106,35 +110,64 @@ public class chaining {
 
         while (!confirm) {
             refresh(deck, chainedCards);
-            int choice = IO.INTput(sc, "Chose");
+            int choice = IO.INTput(sc, "Chose a card or input 0 to be done");
 
-            if (chainedCards.size() == 0) {
+            if (choice == 0) {
+                String confInput = IO.StringPut(sc, "Confirm [y] or Clear [c]");
+                while (!validInput(confInput)) {
+                    confInput = IO.StringPut(sc, "Only y or c");
+                }
+                if (confInput.equalsIgnoreCase("y")) {
+                    confirm = true;
+                } else if (confInput.equalsIgnoreCase("c")) {
+                    chainedCards.clear();
+                    deck.clear();
+                    deck.addAll(OldMainDeck);
+                }
+            }
+             else if (chainedCards.size() == 0) {
                 cardsMove(deck, chainedCards, choice - 1);
-            } else {
+            }  else {
                 cards toMove = deck.get(choice - 1);
                 cards topChain = chainedCards.get(chainedCards.size() - 1);
                 if (toMove.name.equals(topChain.name)) {
                     cardsMove(deck, chainedCards, choice - 1);
-                } else if (toMove.value + 1 == topChain.value) {
+                } else if ((toMove.value + 1 == topChain.value)&& toMove.suit.equals(topChain.suit)) {
                     cardsMove(deck, chainedCards, choice - 1);
-                } else if (toMove.value - 1 == topChain.value) {
+                } else if ((toMove.value - 1 == topChain.value)&& toMove.suit.equals(topChain.suit)) {
                     cardsMove(deck, chainedCards, choice - 1);
                 } else {
                     IO.clear();
                     IO.print("No");
                     IO.enterPause(sc);
                 }
-                refresh(deck, chainedCards);
-                String done = IO.StringPut(sc, "Are you done [y/n]");
-                if (done.equals("y")) {
-                    confirm = true;
-                } else if (done.equals("n")) {
-                    confirm = false;
-                }
             }
-        }
+        } 
+
+        topCardCheck(chainedCards);
         IO.print("Ok");
         IO.enterPause(sc);
+
+    }
+
+    public static boolean validInput(String input) {
+        if (input.equals("y") || input.equals("c")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static void topCardCheck(ArrayList<cards> chained) {
+        cards top = chained.get(chained.size() - 1);
+
+        if (top.name.equals("Ace")) {
+            IO.print("Now u change suit");
+        } else if ((top.name.equals("Jack")) && ((top.suit.equals("Spades")) || (top.suit.equals("Clubs")))) {
+            IO.print("pikcup5");
+        } else if (top.name.equals("Two")) {
+            IO.print("that's a two now i pickup2 ");
+        }
 
     }
 

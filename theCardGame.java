@@ -1,6 +1,15 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/*Say who wins
+show previous card under the top card ✅
+When you pick up let them play ✅
+Show what the cpu played then enter to continue ✅
+make it so it shows a winner
+rework ai to clear all card form one suit then use ace
+make it so pickup ones and it still ur turn but only for one round ✅
+cards that are already played become the original deck ❎
+ */
 public class theCardGame {
     public static void main(String[] args) {
         ArrayList<cards> playerCards = new ArrayList<cards>();
@@ -69,10 +78,7 @@ public class theCardGame {
         while (!end) {
             refreshDisplay(playerCards, compCards, topCard);
             int choice = 0;
-            IO.print("\n1. Play a card");
-            IO.print("2. Pick up a card");
-            IO.print("3. Quit");
-            choice = IO.INTput(sc, "Choose one of the options");
+            choice = showOptions(sc, pickedUp);
             if (choice == 1) {
                 playCard(playerCards, compCards, topCard, deck, sc);
             } else if (choice == 2) {
@@ -99,6 +105,19 @@ public class theCardGame {
         IO.print("I hope so :)");
     }
 
+    public static int showOptions(Scanner sc, boolean pickedUp) {
+        IO.print("\n1. Play a card");
+
+        if (pickedUp == true) {
+            IO.print("2. End Turn");
+        } else {
+            IO.print("2. Pick up a card");
+        }
+        IO.print("3. Quit");
+        int choice = IO.INTput(sc, "Choose one of the options");
+        return choice;
+    }
+
     public static void playCard(ArrayList<cards> playerCards, ArrayList<cards> compCards, ArrayList<cards> middleCards,
             ArrayList<cards> deck, Scanner sc) {
         /*
@@ -113,10 +132,10 @@ public class theCardGame {
 
         if (playable) {
             cards currentMiddle = middleCards.get(middleCards.size() - 1);
-            IO.print("The top card is: " + currentMiddle.name + " of " + currentMiddle.suit);
+            IO.print("The top card is: " + nameFor(currentMiddle));
             IO.print("\nYour cards: ");
             for (int i = 0; i < playerCards.size(); i++) {
-                IO.print((i + 1) + ". " + playerCards.get(i).getName() + " of " + playerCards.get(i).getSuit());
+                IO.print((i + 1) + ". " + nameFor(playerCards.get(i)));
             }
             int cardPlace = IO.INTput(sc, "Enter the number of the card you want to play") - 1;
             boolean validInput = checkValid(playerCards, currentMiddle, cardPlace, sc);
@@ -124,7 +143,6 @@ public class theCardGame {
                 cardPlace = IO.INTput(sc, "Enter the number of the card you want to play") - 1;
                 validInput = checkValid(playerCards, currentMiddle, cardPlace, sc);
             }
-
             // Add letting user chain here
             placeCard(playerCards, compCards, middleCards, deck, cardPlace, sc, 1);
             CPUturn(playerCards, compCards, middleCards, deck, sc);
@@ -238,18 +256,16 @@ public class theCardGame {
             for (int i = 0; i < compCards.size(); i++) {
                 String currentName = compCards.get(i).name;
                 String currentSuit = compCards.get(i).suit;
-                if (currentName.equals("Jack") && checkPlayable(compCards.get(i), currentMiddle)  && ((currentSuit.equals("Spades")) || (currentSuit.equals("Clubs")))) {
+                if (currentName.equals("Jack") && checkPlayable(compCards.get(i), currentMiddle)
+                        && ((currentSuit.equals("Spades")) || (currentSuit.equals("Clubs")))) {
                     IO.print(i);
-                    placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
-                    played = true;
+                    played = CPUplay(compCards, playerCards, middleCards, deck, i, sc, played);
                     break;
                 } else if (currentName.equals("Two") && checkPlayable(compCards.get(i), currentMiddle)) {
-                    placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
-                    played = true;
+                    played = CPUplay(compCards, playerCards, middleCards, deck, i, sc, played);
                     break;
                 } else if (currentName.equals("Ace") && checkPlayable(compCards.get(i), currentMiddle)) {
-                    placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
-                    played = true;
+                    played = CPUplay(compCards, playerCards, middleCards, deck, i, sc, played);
                     break;
                 }
             }
@@ -257,16 +273,30 @@ public class theCardGame {
             if (!played) {
                 for (int i = 0; i < compCards.size(); i++) {
                     if (checkPlayable(compCards.get(i), currentMiddle)) {
-                        placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
-                        played = true;
+                        played = CPUplay(compCards, playerCards, middleCards, deck, i, sc, played);
                         break;
                     }
                 }
             }
         } else {
             // pickup card if no playable cards
+            IO.clear();
+            IO.print("The CPU picked up a card");
             compCards.add(cards.pickupCard(deck));
+            IO.enterPause(sc);
         }
+    }
+
+    public static boolean CPUplay(ArrayList<cards> compCards, ArrayList<cards> playerCards,
+            ArrayList<cards> middleCards, ArrayList<cards> deck, int i, Scanner sc, boolean played) {
+        cards userplayed = middleCards.get(middleCards.size() - 1);
+        cards cpuplayed = compCards.get(i);
+        IO.clear();
+        placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
+        IO.print("The CPU played: " + nameFor(cpuplayed));
+        IO.enterPause(sc);
+        played = true;
+        return played;
     }
 
     public static boolean checkPlayable(ArrayList<cards> playerCards, cards middleCard) {
@@ -294,22 +324,28 @@ public class theCardGame {
             ArrayList<cards> topCard) {
         IO.clear();
         IO.print("==The Card Game==");
-        IO.print("\nYour cards(Remaining-"+playerCards.size()+"): ");
+        IO.print("\nYour cards(Remaining - " + playerCards.size() + "): ");
         for (int i = 0; i < playerCards.size(); i++) {
-            IO.print(playerCards.get(i).getName() + " of " + playerCards.get(i).getSuit());
+            IO.print(nameFor(playerCards.get(i)));
         }
         IO.print("\nCPU remaining cards: " + compCards.size());
-        //IO.print("==FOR TESTING ONLY==");
+        // IO.print("==FOR TESTING ONLY==");
         for (int i = 0; i < compCards.size(); i++) {
-            //IO.print(compCards.get(i).getName() + " of " + compCards.get(i).getSuit());
+            // IO.print(compCards.get(i).getName() + " of " + compCards.get(i).getSuit());
         }
         cards currentMiddle = topCard.get(topCard.size() - 1);
+        try {
+            cards beforeMiddle = topCard.get(topCard.size() - 2);
+            IO.print("\nPrevious card: " + nameFor(beforeMiddle));
+        } catch (IndexOutOfBoundsException e) {
+            IO.print("\nNothing to see...");
+        }
         // Ace changed suit
+
         if (currentMiddle.getID() == -1) {
             IO.print("The next card played must be a: " + currentMiddle.suit);
         } else {
-            IO.print("\nTop card: " + currentMiddle.getName() + " of "
-                    + currentMiddle.getSuit());
+            IO.print("Top card: " + nameFor(currentMiddle));
         }
 
     }
@@ -321,5 +357,9 @@ public class theCardGame {
             compCards.add(cards.pickupCard(deck));
         }
         topCard.add(cards.pickupCard(deck));
+    }
+
+    public static String nameFor(cards output) {
+        return output.name + " of " + output.suit;
     }
 }
