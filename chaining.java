@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class chaining {
     public static void main(String[] args) {
+        IO.clear();
         ArrayList<cards> playerCards = new ArrayList<cards>();
         ArrayList<cards> entireDeck = cards.loadDeckCards();
         ArrayList<cards> chained = new ArrayList<cards>();
@@ -23,10 +24,12 @@ public class chaining {
          * entireDeck.add(new cards(10, 13, "Hearts", "King", false));
          */
 
-        for (int i = 10; i < 20; i++) {
+        for (int i = 0; i < 20; i++) {
             playerCards.add(cards.pickupCard(entireDeck));
         }
-        checkForChains(playerCards, chained, sc);
+        //System.out.println(chainAvailable(playerCards));
+        // checkForChains(playerCards, chained, sc);
+        sortDeck(playerCards);
     }
 
     public static void refresh(ArrayList<cards> deck, ArrayList<cards> chained) {
@@ -41,21 +44,54 @@ public class chaining {
         }
     }
 
-    public static boolean chainAvailable(ArrayList<cards> deck){
-        for(int i =0; i<deck.size()-1;i++){
-            for(int j =i; j<deck.size();)
-        }
-  if (toMove.name.equals(topChain.name)) {
-                    cardsMove(deck, chainedCards, choice - 1);
-                } else if (toMove.value + 1 == topChain.value) {
-                    cardsMove(deck, chainedCards, choice -1);
-                } else if (toMove.value - 1 == topChain.value) {
-                    cardsMove(deck, chainedCards, choice - 1);
+    public static boolean chainAvailable(ArrayList<cards> deck) {
+        for (int i = 0; i < deck.size() - 1; i++) {
+            for (int j = i + 1; j < deck.size(); j++) {
+                cards left = deck.get(i);
+                cards right = deck.get(j);
+                if (left.name.equals(right.name)) {
+                    IO.print(nameFor(right));
+                    IO.print(nameFor(left));
+                    return true;
+                } else if (left.value + 1 == right.value && left.suit.equals(right.suit)) {
+                    IO.print(nameFor(right));
+                    IO.print(nameFor(left));
+                    return true;
+                } else if (left.value - 1 == right.value && left.suit.equals(right.suit)) {
+                    IO.print(nameFor(right));
+                    IO.print(nameFor(left));
+                    return true;
                 }
+            }
+        }
+
+        return false;
+
     }
 
-    public static void sortDeck(ArrayList<cards> deck){
+    public static void sortDeck(ArrayList<cards> deck) {
+        String[] suits = { "Clubs", "Diamonds", "Hearts", "Spades" };
+        String[] names = { "Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack",
+                "Queen", "King" };
 
+        ArrayList<cards> sorted = new ArrayList<cards>();
+
+        for (int j = 0; j < suits.length; j++) {
+            for (int k = 0; k < names.length; k++) {
+                for (int i = 0; i < deck.size(); i++) {
+                    cards current = deck.get(i);
+
+                    if(current.name.equals(names[k])&&current.suit.equals(suits[j])){
+                        sorted.add(current);
+                    }
+
+                }
+            }
+        }
+
+        for(cards c:sorted){
+            IO.print(nameFor(c));
+        }
     }
 
     public static void checkForChains(ArrayList<cards> deck, ArrayList<cards> chainedCards, Scanner sc) {
@@ -80,7 +116,7 @@ public class chaining {
                 if (toMove.name.equals(topChain.name)) {
                     cardsMove(deck, chainedCards, choice - 1);
                 } else if (toMove.value + 1 == topChain.value) {
-                    cardsMove(deck, chainedCards, choice -1);
+                    cardsMove(deck, chainedCards, choice - 1);
                 } else if (toMove.value - 1 == topChain.value) {
                     cardsMove(deck, chainedCards, choice - 1);
                 } else {
