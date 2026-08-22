@@ -9,6 +9,7 @@ make it so it shows a winner
 rework ai to clear all card form one suit then use ace
 make it so pickup ones and it still ur turn but only for one round ✅
 cards that are already played become the original deck ❎
+add modifiers like pickups
  */
 public class theCardGame {
     public static void main(String[] args) {
@@ -125,8 +126,7 @@ public class theCardGame {
          * 2. If they can't play it, tell them to pick up a card
          * 3. If they can play it, remove it from their hand and add it to the top card
          * 4. If they played a 2 or blackjack, make the cpu pick up cards
-         * 5. make the cpu play??
-         * 6.
+         * 5. make the cpu play?
          */
         boolean playable = checkPlayable(playerCards, middleCards.get(middleCards.size() - 1));
 
@@ -144,6 +144,7 @@ public class theCardGame {
                 validInput = checkValid(playerCards, currentMiddle, cardPlace, sc);
             }
             // Add letting user chain here
+            IO.clear();
             placeCard(playerCards, compCards, middleCards, deck, cardPlace, sc, 1);
             CPUturn(playerCards, compCards, middleCards, deck, sc);
         } else {
@@ -176,9 +177,10 @@ public class theCardGame {
         cards moved = from.get(index);
         // 0 is cpu 1 is user
         if (moved.name.equals("Ace")) {
-            cardSwap(from, middleCards, index);
+            from.remove(index);
 
             if (who == 1) {
+                IO.print("You played a: " + nameFor(from.get(from.size() - 1)));
                 String newSuit = IO.StringPut(sc, "Which suit do you want to change it to?");
                 while (!newSuit.equals("Diamonds") && !newSuit.equals("Hearts") && !newSuit.equals("Clubs")
                         && !newSuit.equals("Spades")) {
@@ -189,8 +191,7 @@ public class theCardGame {
                 cardSwap(SuitChange, middleCards);
 
             } else if (who == 0) {
-
-                cardSwap(from, middleCards, index);
+                IO.print("The CPU played a: " + nameFor(from.get(from.size() - 1)));
 
                 String[] suits = { "Spades", "Hearts", "Diamonds", "Clubs" };
                 int[] suitsCount = { 0, 0, 0, 0 };
@@ -211,10 +212,19 @@ public class theCardGame {
                 }
                 cards SuitChange = new cards(suits[ind], -1);
                 cardSwap(SuitChange, middleCards);
+                IO.enterPause(sc);
+
             }
         } else if ((moved.name.equals("Jack")) && ((moved.suit.equals("Spades")) || (moved.suit.equals("Clubs")))) {
             for (int i = 0; i < 5; i++) {
                 to.add(cards.pickupCard(deck));
+            }
+            if (who == 1) {
+                IO.print("You played a: " + nameFor(from.get(from.size() - 1)));
+                IO.print("The CPU picked up 5 cards");
+            } else if (who == 0) {
+                IO.print("The CPU played a: " + nameFor(from.get(from.size() - 1)));
+                IO.print("You picked up 5 cards");
             }
             cardSwap(from, middleCards, index);
         } else if (moved.name.equals("Two")) {
@@ -222,8 +232,20 @@ public class theCardGame {
                 to.add(cards.pickupCard(deck));
             }
             cardSwap(from, middleCards, index);
+            if (who == 1) {
+                IO.print("You played a: " + nameFor(middleCards.get(middleCards.size() - 1)));
+                IO.print("The CPU picked up 2 cards");
+            } else if (who == 0) {
+                IO.print("The CPU played a: " + nameFor(middleCards.get(middleCards.size() - 1)));
+                IO.print("You picked up 2 cards");
+            }
         } else {
             cardSwap(from, middleCards, index);
+            if (who == 1) {
+                IO.print("You played a: " + nameFor(middleCards.get(middleCards.size() - 1)));
+            } else if (who == 0) {
+                IO.print("The CPU played a: " + nameFor(middleCards.get(middleCards.size() - 1)));
+            }
         }
     }
 
@@ -280,7 +302,7 @@ public class theCardGame {
             }
         } else {
             // pickup card if no playable cards
-            IO.clear();
+            // IO.clear();
             IO.print("The CPU picked up a card");
             compCards.add(cards.pickupCard(deck));
             IO.enterPause(sc);
@@ -289,11 +311,10 @@ public class theCardGame {
 
     public static boolean CPUplay(ArrayList<cards> compCards, ArrayList<cards> playerCards,
             ArrayList<cards> middleCards, ArrayList<cards> deck, int i, Scanner sc, boolean played) {
-        cards userplayed = middleCards.get(middleCards.size() - 1);
-        cards cpuplayed = compCards.get(i);
-        IO.clear();
+        // cards userplayed = middleCards.get(middleCards.size() - 1);
+        // cards cpuplayed = compCards.get(i);
         placeCard(compCards, playerCards, middleCards, deck, i, sc, 0);
-        IO.print("The CPU played: " + nameFor(cpuplayed));
+        // IO.print("The CPU played: " + nameFor(cpuplayed));
         IO.enterPause(sc);
         played = true;
         return played;
