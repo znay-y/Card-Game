@@ -9,6 +9,9 @@ class cards {
     String name;
     boolean picked;
 
+    public cards(){
+        
+    }
     public cards(String newSuit, int id) {
         this.suit = newSuit;
         this.name = "Suit Changer";

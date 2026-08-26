@@ -20,7 +20,7 @@ public class LaunchGame {
             } else if (choice == 2) {
                 busGame.main(args, player);
             } else if (choice == 3) {
-                theCardGame.main(args, player);
+                //theCardGame.main(args, player);
             } else if (choice == 4) {
                 poker.main(args, player);
             } else if (choice == 5) {
