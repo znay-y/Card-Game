@@ -1,3 +1,8 @@
+# Current Known issues
+CPU cannot chain without infinite looping
+Lots of debug text
+Code lowkey all over the place and makes no sense
+
 # Casino Card Games
 
 ## About
